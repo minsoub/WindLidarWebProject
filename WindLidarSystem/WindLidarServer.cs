@@ -27,7 +27,15 @@ namespace WindLidarSystem
             public string s_sts;
             public string s_lastDt;
         }
+
+        public struct FtsInfo
+        {
+            public string s_code;
+            public string s_sts;
+            public string s_lastDt;
+        }
         private List<StsInfo> stList;
+        private List<FtsInfo> ftList;
 
         public WindLidarServer()
         {
@@ -64,6 +72,7 @@ namespace WindLidarSystem
 
             createStatusBar();
             stList = new List<StsInfo>();
+            ftList = new List<FtsInfo>();
 
             // 초기 세팅값
             defaultClear();
@@ -202,6 +211,43 @@ namespace WindLidarSystem
             refreshWindow();
         }
 
+
+        public void ftsMessage(string msg)
+        {
+            string[] msgArr = msg.Split(delimiterChar);
+
+            string stCode = msgArr[1];
+            string stSts = msgArr[2];
+            string rcvTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            FtsInfo item = new FtsInfo();
+            item.s_code = stCode;
+            item.s_sts = stSts;
+            item.s_lastDt = rcvTime;
+            if (ftList.Count() == 0)
+            {
+                ftList.Add(item);
+            }
+            else
+            {
+                int found = 0;
+                for (int i = 0; i < stList.Count(); i++)
+                {
+                    if (ftList[i].s_code == item.s_code)
+                    {
+                        ftList[i] = item;
+                        found = 1;
+                    }
+                }
+                if (found == 0)
+                {
+                    ftList.Add(item);   // new
+                }
+            }
+
+            refreshWindow();
+        }
+
+
         private void refreshWindow()
         {
             for (int i=0; i<stList.Count(); i++)
@@ -223,6 +269,21 @@ namespace WindLidarSystem
                     UpdateRadioStsC(item.s_sts);
                     UpdateLableStcLastTime(item.s_lastDt);
                 }
+
+                FtsInfo ftm = ftList[i];
+
+                if (ftm.s_code == "13211")       // 일산
+                {
+                    UpdateLableFtaLastTime(ftm.s_lastDt);
+                }
+                if (ftm.s_code == "13210")       // 송도
+                {
+                    UpdateLableFtbLastTime(ftm.s_lastDt);
+                }
+                if (ftm.s_code == "13206")       //구로
+                {
+                    UpdateLableFtcLastTime(ftm.s_lastDt);
+                }                
             }
         }
 
@@ -293,6 +354,40 @@ namespace WindLidarSystem
             else
             {
                 lblstcLastTime.Text = msg;
+            }
+        }
+
+        private void UpdateLableFtaLastTime(string msg)
+        {
+            if (lblstaDataLastTime.InvokeRequired)
+            {
+                lblstaDataLastTime.BeginInvoke(new Action(() => lblstaDataLastTime.Text = msg));
+            }
+            else
+            {
+                lblstaDataLastTime.Text = msg;
+            }
+        }
+        private void UpdateLableFtbLastTime(string msg)
+        {
+            if (lblstbDataLastTime.InvokeRequired)
+            {
+                lblstbDataLastTime.BeginInvoke(new Action(() => lblstbDataLastTime.Text = msg));
+            }
+            else
+            {
+                lblstbDataLastTime.Text = msg;
+            }
+        }
+        private void UpdateLableFtcLastTime(string msg)
+        {
+            if (lblstcDataLastTime.InvokeRequired)
+            {
+                lblstcDataLastTime.BeginInvoke(new Action(() => lblstcDataLastTime.Text = msg));
+            }
+            else
+            {
+                lblstcDataLastTime.Text = msg;
             }
         }
 

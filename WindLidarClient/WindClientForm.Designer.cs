@@ -49,7 +49,6 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lstLog = new System.Windows.Forms.ListBox();
-            this.proBar = new System.Windows.Forms.ProgressBar();
             this.panelHide = new System.Windows.Forms.Panel();
             this.panelClose = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
@@ -256,21 +255,15 @@
             // 
             this.lstLog.BackColor = System.Drawing.Color.Azure;
             this.lstLog.Font = new System.Drawing.Font("굴림", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lstLog.ForeColor = System.Drawing.SystemColors.ScrollBar;
+            this.lstLog.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lstLog.FormattingEnabled = true;
+            this.lstLog.HorizontalScrollbar = true;
             this.lstLog.ItemHeight = 11;
             this.lstLog.Location = new System.Drawing.Point(6, 22);
             this.lstLog.Name = "lstLog";
             this.lstLog.ScrollAlwaysVisible = true;
             this.lstLog.Size = new System.Drawing.Size(1056, 576);
             this.lstLog.TabIndex = 0;
-            // 
-            // proBar
-            // 
-            this.proBar.Location = new System.Drawing.Point(12, 752);
-            this.proBar.Name = "proBar";
-            this.proBar.Size = new System.Drawing.Size(1073, 23);
-            this.proBar.TabIndex = 2;
             // 
             // panelHide
             // 
@@ -304,11 +297,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1090, 803);
+            this.ClientSize = new System.Drawing.Size(1090, 766);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.panelHide);
             this.Controls.Add(this.panelClose);
-            this.Controls.Add(this.proBar);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "WindClientForm";
@@ -340,7 +332,6 @@
         private System.Windows.Forms.TextBox txtIP;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ProgressBar proBar;
         private System.Windows.Forms.ListBox lstLog;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;

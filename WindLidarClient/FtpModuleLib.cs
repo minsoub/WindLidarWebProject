@@ -37,7 +37,7 @@ namespace WindLidarClient
 
         public void setSendData(SndDataInfo data)
         {
-            mData.clear();
+            //mData.clear();
             mData = data;
         }
 

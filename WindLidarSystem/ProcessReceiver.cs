@@ -40,6 +40,9 @@ namespace WindLidarSystem
         private delegate void StsMessageCallback(String msg);
         StsMessageCallback stsMessage;
 
+        private delegate void FtsMessageCallback(String msg);
+        FtsMessageCallback ftsMessage;
+
         private delegate void StsMessageDBCallback(string msg);
         StsMessageDBCallback stsDB;
 
@@ -57,6 +60,7 @@ namespace WindLidarSystem
             stsHandle = new ManualResetEvent(false);
             log = new LogMessageCallback(main.logMessage);
             stsMessage = new StsMessageCallback(main.stsMessage);
+            ftsMessage = new FtsMessageCallback(main.ftsMessage);
             stsDB = new StsMessageDBCallback(main.stsDB);
             stsProcess = new StatusProcess(this);
             ftsProcess = new FileProcess(this);
@@ -131,8 +135,8 @@ namespace WindLidarSystem
                     // 데이터베이스에 접속해서 데이터를 가져온다.
                     try
                     {
-                        if (oCon != null)
-                        {
+                        //if (oCon != null)
+                        //{
                             // 하나의 Row 가져오기
                             StsInfo fileData = ftsProcess.getRcvDataInfo();
                             if (fileData != null)
@@ -141,8 +145,16 @@ namespace WindLidarSystem
                                 ftsProcess.setFtpInfo(fileData.s_code, FTP_URI, ParamInitInfo.Instance.m_ftpIP, ParamInitInfo.Instance.m_ftpPort,
                                     ParamInitInfo.Instance.m_ftpUser, ParamInitInfo.Instance.m_ftpPass); 
                                 bool sts = ftsProcess.ftpSendData(fileData);
+
+                                if (sts == false)
+                                {
+                                    Console.WriteLine("ftsProcess ftpSendData false...........");
+                                }
+                            }else
+                            {
+                                Console.WriteLine("StsInfo is null..........");
                             }
-                        }
+                        //}
                     }
                     catch (MySqlException e)
                     {
@@ -223,6 +235,7 @@ namespace WindLidarSystem
                         if (bl == true)
                         {
                             log("[ ProcessReceiver::ReceiverClient(info) ] file data status update [ok]");
+                            ftsMessage(msg);
                         }
 
                         //ftpMessage(msg);
@@ -240,6 +253,7 @@ namespace WindLidarSystem
                 }catch(Exception ex)
                 {
                     log("[ ProcessReceiver::ReceiverClient(error) ] " + ex.ToString());
+                    server.BeginReceive(ReceiverClient, null);
                 }
             }
         }

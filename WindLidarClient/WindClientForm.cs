@@ -142,21 +142,21 @@ namespace WindLidarClient
          */
         public void StartPointProgress(int data)
         {
-            StartPointProgress(proBar, data);
+           // StartPointProgress(proBar, data);
         }
         /**
          * ProgressBar의 최대 Maximum의 숫자를 지정한다.
          */
         public void EndPointProgress(int data)
         {
-            EndPointProgress(proBar, data);
+          //  EndPointProgress(proBar, data);
         }
         /**
          * ProgressBar의 진행을 설정한다.
          */
         public void IngProgress(int data)
         {
-            IngProgress(proBar, data);
+          //  IngProgress(proBar, data);
         }
 
         private void logMessage(ListBox _lstLog, string _msg)

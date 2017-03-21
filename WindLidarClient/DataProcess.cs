@@ -97,8 +97,11 @@ namespace WindLidarClient
             {
                 string file = fi.FullName;
                 string ext = Path.GetExtension(file);
+                
+
                 if (ext == ".ini" || ext == ".sta")
                 {
+                    Console.WriteLine("[HasWritePermissionOnDir]" + file);
                     if (FileLocked(file) == false)       // File lock이 아니면
                     {
                         // INI 파일 체크
@@ -107,6 +110,7 @@ namespace WindLidarClient
                             sendInfo.iniFileName = fi.Name;
                             sendInfo.iniFullFileName = file;
                             sendInfo.fileCount++;
+                            if (sendInfo.fileCount == 2) break;
                         }
                         // STS 파일 체크
                         if (ext == ".sta")
@@ -115,7 +119,7 @@ namespace WindLidarClient
                             sendInfo.staFullFileName = file;
                             sendInfo.fileCount++;
                             cnt++;
-                            break;
+                            if (sendInfo.fileCount == 2) break;
                         }                        
                     }
                 }
@@ -136,13 +140,16 @@ namespace WindLidarClient
                 string ext = Path.GetExtension(file);
                 if (ext == ".rtd")
                 {
-                    DateTime rtdDt = convertTimeExtract(file);
+                    DateTime rtdDt = convertTimeExtract(fi.Name);
 
                     // to ~ from에 속하는 데이터인지 확인한다.
                     double s1 = (arrDt[0] - rtdDt).TotalSeconds;
                     double s2 = (arrDt[1] - rtdDt).TotalSeconds;
 
-                    if (s1 >= 0 && s2 <= 0)         // 해당 시간내에 속한 파일이다.
+                    //Console.WriteLine(arrDt[0] + ", " + arrDt[1]);
+                    //Console.WriteLine("staName : " + staName + ", rtd : " + file + ", s1 : " + s1 + ", s2 : " + s2);
+
+                    if (s1 <= 0 && s2 >= 0)         // 해당 시간내에 속한 파일이다.
                     {
                         sendInfo.fileCount++;
                         SndDataInfo.sFileInfo sf = new SndDataInfo.sFileInfo();
@@ -176,23 +183,25 @@ namespace WindLidarClient
                 h1 = sendInfo.staFileName.Substring(3, 2);
                 m1 = sendInfo.staFileName.Substring(6, 2);
                 s1 = sendInfo.staFileName.Substring(9, 2);
-                d2 = sendInfo.staFileName.Substring(14, 2);
-                h2 = sendInfo.staFileName.Substring(17, 2);
-                m2 = sendInfo.staFileName.Substring(20, 2);
-                s2 = sendInfo.staFileName.Substring(23, 2);
+                d2 = sendInfo.staFileName.Substring(12, 2);
+                h2 = sendInfo.staFileName.Substring(15, 2);
+                m2 = sendInfo.staFileName.Substring(18, 2);
+                s2 = sendInfo.staFileName.Substring(21, 2);
 
                 stDt = year + "_" + mon + "_" + d1 + "_" + h1 + "_" + m1 + "_" + s1;
                 etDt = year + "_" + mon + "_" + d2 + "_" + h2 + "_" + m2 + "_" + s2;
 
                 // Ini파일에서 type을 읽어 들인다.
                 string iniFilePath = Path.Combine(sendInfo.path, sendInfo.iniFileName);
-                IniFile iniFile = new IniFile(@iniFilePath);
-                string type = iniFile.Read("TYPE");
-                string p1 = iniFile.Read("PARAM1");
-                string p2 = iniFile.Read("PARAM2");
-                string p3 = iniFile.Read("PARAM3");
-                string p4 = iniFile.Read("PARAM4");
-                string p5 = iniFile.Read("AVERTIME");
+                Console.WriteLine("initFile : " + iniFilePath);
+
+                IniFile iniFile = new IniFile(iniFilePath);
+                string type = iniFile.Read("TYPE", "PARAMS");
+                string p1 = iniFile.Read("PARAM1", "PARAMS");
+                string p2 = iniFile.Read("PARAM2", "PARAMS");
+                string p3 = iniFile.Read("PARAM3", "PARAMS");
+                string p4 = iniFile.Read("PARAM4", "PARAMS");
+                string p5 = iniFile.Read("AVERTIME", "PARAMS");
 
                 // type save
                 sendInfo.type = type;
@@ -275,10 +284,10 @@ namespace WindLidarClient
                 h1 = sendInfo.staFileName.Substring(3, 2);
                 m1 = sendInfo.staFileName.Substring(6, 2);
                 s1 = sendInfo.staFileName.Substring(9, 2);
-                d2 = sendInfo.staFileName.Substring(14, 2);
-                h2 = sendInfo.staFileName.Substring(17, 2);
-                m2 = sendInfo.staFileName.Substring(20, 2);
-                s2 = sendInfo.staFileName.Substring(23, 2);
+                d2 = sendInfo.staFileName.Substring(12, 2);
+                h2 = sendInfo.staFileName.Substring(15, 2);
+                m2 = sendInfo.staFileName.Substring(18, 2);
+                s2 = sendInfo.staFileName.Substring(21, 2);
 
                 stDt = year + "_" + mon + "_" + d1 + "_" + h1 + "_" + m1 + "_" + s1;
                 etDt = year + "_" + mon + "_" + d2 + "_" + h2 + "_" + m2 + "_" + s2;
@@ -436,22 +445,23 @@ namespace WindLidarClient
 
         DateTime[] fromDateTimeExtract(string data)
         {
-            // data 10_08_55_00_-_10_09_00_58
             string toDt = null;
             string fromDt = null;
 
             string year = DateTime.Today.ToString("yyyy");
             string mon = DateTime.Today.ToString("MM");
 
+            // 03_08_18_59-03_08_25_06.sta
             string d1, d2, h1, h2, m1, m2, s1, s2;
             d1 = data.Substring(0, 2);
             h1 = data.Substring(3, 2);
             m1 = data.Substring(6, 2);
             s1 = data.Substring(9, 2);
-            d2 = data.Substring(14, 2);
-            h2 = data.Substring(17, 2);
-            m2 = data.Substring(20, 2);
-            s2 = data.Substring(23, 2);
+
+            d2 = data.Substring(12, 2);
+            h2 = data.Substring(15, 2);
+            m2 = data.Substring(18, 2);
+            s2 = data.Substring(21, 2);
 
             toDt = year + "-" + mon + "-" + d1 + " " + h1 + ":" + m1 + ":" + s1;
             fromDt = year + "-" + mon + "-" + d2 + " " + h2 + ":" + m2 + ":" + s2;
@@ -476,6 +486,8 @@ namespace WindLidarClient
             m1 = data.Substring(6, 2);
             s1 = data.Substring(9, 2);
             dt = year + "-" + mon + "-" + d1 + " " + h1 + ":" + m1 + ":" + s1;
+            //Console.WriteLine(dt);
+
 
             return DateTime.ParseExact(dt, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
         }

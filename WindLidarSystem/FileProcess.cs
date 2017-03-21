@@ -36,7 +36,8 @@ namespace WindLidarSystem
         public bool fileStsUpdate(string msg)
         {
             bool result = false;
-            // "FT:" + info.s_code + ":" + info.s_year + ":" + info.s_month + ":" + info.s_day + ":" + info.s_hour + ":" + info.r_min + ":" + info.s_sec + ":" + cnt;
+            //FT:관측소ID:IP ADDR:시작시각:종료시각:파일개수:파일명:P1:P2:P3:P4:P5:S  => START
+            //FT:관측소ID:IP ADDR:시작시각:종료시각:총개수:파일명:E => END
             logMsg("[ FileProcess::fileStsUpdate ] received msg : " + msg);
 
             // Database에 등록한다.
@@ -60,15 +61,17 @@ namespace WindLidarSystem
                         st_time = String.Format("{0}-{1}-{2} {3}:{4}:{5}",
                             arrTime1[0], arrTime1[1], arrTime1[2], arrTime1[3], arrTime1[4], arrTime1[5]
                         );
-                        string[] arrTime2 = arrMsg[3].Split(splitSt);
+                        string[] arrTime2 = arrMsg[4].Split(splitSt);
                         et_time = String.Format("{0}-{1}-{2} {3}:{4}:{5}",
                             arrTime2[0], arrTime2[1], arrTime2[2], arrTime2[3], arrTime2[4], arrTime2[5]
                         );
 
 
-                        sql = String.Format("UPDATE T_RCV_STS set acc_file_cnt = {0} WHERE s_code = '{1}' and st_time='{2}' and et_tiem='{3}' )",
+                        sql = String.Format("UPDATE T_RCV_STS set acc_file_cnt = {0} WHERE s_code = '{1}' and st_time='{2}' and et_time='{3}'",
                         arrMsg[5], arrMsg[1], st_time, et_time
                         );
+
+                        logMsg(sql);
                         oCmd = new MySqlCommand(sql, conn);
                         oCmd.ExecuteNonQuery();
 
@@ -88,7 +91,7 @@ namespace WindLidarSystem
                             st_time = String.Format("{0}-{1}-{2} {3}:{4}:{5}",
                                 arrTime1[0], arrTime1[1], arrTime1[2], arrTime1[3], arrTime1[4], arrTime1[5]
                             );
-                            string[] arrTime2 = arrMsg[3].Split(splitSt);
+                            string[] arrTime2 = arrMsg[4].Split(splitSt);
                             et_time = String.Format("{0}-{1}-{2} {3}:{4}:{5}",
                                 arrTime2[0], arrTime2[1], arrTime2[2], arrTime2[3], arrTime2[4], arrTime2[5]
                             );
@@ -96,7 +99,7 @@ namespace WindLidarSystem
                             // sts insert
                             sql = String.Format("insert into T_RCV_STS (s_code, st_time, et_time, real_file_cnt, acc_file_cnt, err_chk, s_chk, srv_file_cnt, f_name, reg_dt) values"
                             + " ('{0}', '{1}', '{2}', '{3}', '{4}', 'N', 'N', 0,  '{5}', current_timestamp ) ",
-                            arrMsg[1], st_time, et_time, arrMsg[4], 0
+                            arrMsg[1], st_time, et_time, arrMsg[5], 0, arrMsg[6]
                             );
                             oCmd = new MySqlCommand(sql, conn);
                             oCmd.ExecuteNonQuery();
@@ -126,6 +129,8 @@ namespace WindLidarSystem
             {
                 log.Log("[FileProcess::fileStsUpdate] error : " + e.Message);
                 logMsg("[FileProcess::fileStsUpdate] error : " + e.Message);
+                Console.WriteLine(e.Message);
+
                 result = false;
             }
 
@@ -293,6 +298,10 @@ namespace WindLidarSystem
             DirectoryInfo dir = new DirectoryInfo(dataPath);
             int cnt = 0;
             sendInfo.path = dataPath;
+            sendInfo.m_year = year;
+            sendInfo.m_mon = mon;
+            sendInfo.m_day = day;
+
             foreach (FileInfo fi in dir.GetFiles().OrderBy(fi => fi.CreationTime))      // 날짜순 정렬
             {
                 string file = fi.FullName;
@@ -308,13 +317,13 @@ namespace WindLidarSystem
                 }
                 if (ext == ".ini")
                 {
-                    DateTime rtdDt = convertTimeExtract(file);
+                    DateTime rtdDt = convertTimeExtract(fi.Name);
 
                     // to ~ from에 속하는 데이터인지 확인한다.
                     double s1 = (arrDt[0] - rtdDt).TotalSeconds;
                     double s2 = (arrDt[1] - rtdDt).TotalSeconds;
 
-                    if (s1 >= 0 && s2 <= 0)         // 해당 시간내에 속한 파일이다.
+                    if (s1 <= 0 && s2 >= 0)         // 해당 시간내에 속한 파일이다.
                     {
                         sendInfo.iniFileName = fi.Name;
                         sendInfo.iniFullFileName = file;
@@ -337,13 +346,13 @@ namespace WindLidarSystem
                 string ext = Path.GetExtension(file);
                 if (ext == ".rtd")
                 {
-                    DateTime rtdDt = convertTimeExtract(file);
+                    DateTime rtdDt = convertTimeExtract(fi.Name);
 
                     // to ~ from에 속하는 데이터인지 확인한다.
                     double s1 = (arrDt[0] - rtdDt).TotalSeconds;
                     double s2 = (arrDt[1] - rtdDt).TotalSeconds;
 
-                    if (s1 >= 0 && s2 <= 0)         // 해당 시간내에 속한 파일이다.
+                    if (s1 <= 0 && s2 >= 0)         // 해당 시간내에 속한 파일이다.
                     {
                         sendInfo.fileCount++;
                         SndDataInfo.sFileInfo sf = new SndDataInfo.sFileInfo();
@@ -427,7 +436,7 @@ namespace WindLidarSystem
 
         DateTime[] fromDateTimeExtract(string data)
         {
-            // data 10_08_55_00_-_10_09_00_58
+            // data 10_08_55_00-10_09_00_58
             string toDt = null;
             string fromDt = null;
 
@@ -439,10 +448,10 @@ namespace WindLidarSystem
             h1 = data.Substring(3, 2);
             m1 = data.Substring(6, 2);
             s1 = data.Substring(9, 2);
-            d2 = data.Substring(14, 2);
-            h2 = data.Substring(17, 2);
-            m2 = data.Substring(20, 2);
-            s2 = data.Substring(23, 2);
+            d2 = data.Substring(12, 2);
+            h2 = data.Substring(15, 2);
+            m2 = data.Substring(18, 2);
+            s2 = data.Substring(21, 2);
 
             toDt = year + "-" + mon + "-" + d1 + " " + h1 + ":" + m1 + ":" + s1;
             fromDt = year + "-" + mon + "-" + d2 + " " + h2 + ":" + m2 + ":" + s2;
@@ -467,6 +476,7 @@ namespace WindLidarSystem
             m1 = data.Substring(6, 2);
             s1 = data.Substring(9, 2);
             dt = year + "-" + mon + "-" + d1 + " " + h1 + ":" + m1 + ":" + s1;
+            Console.WriteLine(data);
 
             return DateTime.ParseExact(dt, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
         }

@@ -232,6 +232,7 @@ namespace WindLidarClient
                     // 파일이 존재하고 접근, 쓸 수 있는 권한이 있는지 체크한다.
                     // 작성 중일 때는 대기..
                     DataProcess  dataProcess = new DataProcess(this);
+                    dataProcess.clear();
                     dataProcess.setPath(m_sourcePath, m_backupPath);
                     dataProcess.setNetworkInfo(m_stCode, m_stHost, m_stPort, m_cstLocalPort, m_st_rcv_port, m_ft_rcv_port);
                     bool sts = dataProcess.HasWritePermissionOnDir(m_sourcePath);
@@ -241,6 +242,7 @@ namespace WindLidarClient
                         Console.WriteLine("[ fileCheckProcess ] Write enabled....");
                         int fntCnt = 0;
                         fntCnt = dataProcess.getSendFileCount();
+                        Console.WriteLine("fileCnt : " + fntCnt);
 
                         startProgress(0);
                         endProgress(fntCnt);
@@ -259,6 +261,7 @@ namespace WindLidarClient
                                 // 데이터 백업 처리
                                 if (ok == true)
                                 {
+                                    log("[FileMoveProcess] called....");
                                     if (dataProcess.FileMoveProcess() == true)
                                     {
                                         // 전송 완료 메시지 전송 및 자료 처리 완료 수신
