@@ -27,6 +27,7 @@ namespace WindLidarClient
         private int m_ltPort;
         private char[] delimiterChar = { ':' };
         private delegate void LogMessageCallback(String msg);
+        private DateTime m_chkDate;
         LogMessageCallback log;
 
         public DataProcess(ObserverProcess m)
@@ -48,6 +49,11 @@ namespace WindLidarClient
         public int getSendFileCount()
         {
             return sendInfo.fileCount;
+        }
+
+        public DateTime getCheckDate()
+        {
+            return m_chkDate;
         }
         /**
          * 네트워크 정보를 설정한다.
@@ -132,6 +138,7 @@ namespace WindLidarClient
 
             string staName = Path.GetFileNameWithoutExtension(sendInfo.staFileName);  // 10_08_55_00_-_10_09_00_58
             DateTime[] arrDt = fromDateTimeExtract(staName);
+            m_chkDate = arrDt[0];
 
             // rtd 파일 읽기
             foreach (FileInfo fi in dir.GetFiles().OrderBy(fi => fi.CreationTime))      // 날짜순 정렬
@@ -179,14 +186,15 @@ namespace WindLidarClient
                 string mon = DateTime.Today.ToString("MM");
 
                 string d1, d2, h1, h2, m1, m2, s1, s2;
+                // 10_08_55_00_-_10_09_00_58.sta
                 d1 = sendInfo.staFileName.Substring(0, 2);
                 h1 = sendInfo.staFileName.Substring(3, 2);
                 m1 = sendInfo.staFileName.Substring(6, 2);
                 s1 = sendInfo.staFileName.Substring(9, 2);
-                d2 = sendInfo.staFileName.Substring(12, 2);
-                h2 = sendInfo.staFileName.Substring(15, 2);
-                m2 = sendInfo.staFileName.Substring(18, 2);
-                s2 = sendInfo.staFileName.Substring(21, 2);
+                d2 = sendInfo.staFileName.Substring(14, 2);
+                h2 = sendInfo.staFileName.Substring(17, 2);
+                m2 = sendInfo.staFileName.Substring(20, 2);
+                s2 = sendInfo.staFileName.Substring(23, 2);
 
                 stDt = year + "_" + mon + "_" + d1 + "_" + h1 + "_" + m1 + "_" + s1;
                 etDt = year + "_" + mon + "_" + d2 + "_" + h2 + "_" + m2 + "_" + s2;
@@ -219,7 +227,7 @@ namespace WindLidarClient
                     c.Send(buf, buf.Length, m_stHost, stPort);
                     //log.Log("File status data send (startStatusSendData :" + m_stHost + "[" + stPort + "]) " + msg);
                     Console.WriteLine("File data send msg : " + msg);
-                    main.setMsg("File data send (startStatusSendData :" + m_stHost + "[" + stPort + "])" + msg);
+                    main.setMsg("File data send start (startStatusSendData :" + m_stHost + "[" + stPort + "])" + msg);
 
                     c.Client.ReceiveTimeout = 2000;     // 2 second
                     IPEndPoint ipepLocal = new IPEndPoint(IPAddress.Any, m_ft_rcv_port);     // 10001 + 2
@@ -284,10 +292,10 @@ namespace WindLidarClient
                 h1 = sendInfo.staFileName.Substring(3, 2);
                 m1 = sendInfo.staFileName.Substring(6, 2);
                 s1 = sendInfo.staFileName.Substring(9, 2);
-                d2 = sendInfo.staFileName.Substring(12, 2);
-                h2 = sendInfo.staFileName.Substring(15, 2);
-                m2 = sendInfo.staFileName.Substring(18, 2);
-                s2 = sendInfo.staFileName.Substring(21, 2);
+                d2 = sendInfo.staFileName.Substring(14, 2);
+                h2 = sendInfo.staFileName.Substring(17, 2);
+                m2 = sendInfo.staFileName.Substring(20, 2);
+                s2 = sendInfo.staFileName.Substring(23, 2);
 
                 stDt = year + "_" + mon + "_" + d1 + "_" + h1 + "_" + m1 + "_" + s1;
                 etDt = year + "_" + mon + "_" + d2 + "_" + h2 + "_" + m2 + "_" + s2;
@@ -302,7 +310,7 @@ namespace WindLidarClient
                     c.Send(buf, buf.Length, m_stHost, stPort);
                     //log.Log("File status data send (startStatusSendData :" + m_stHost + "[" + stPort + "]) " + msg);
                     Console.WriteLine("File data send msg : " + msg);
-                    main.setMsg("File data send (startStatusSendData :" + m_stHost + "[" + stPort + "])" + msg);
+                    main.setMsg("File data send end (startStatusSendData :" + m_stHost + "[" + stPort + "])" + msg);
 
                     c.Client.ReceiveTimeout = 2000;     // 2 second
                     IPEndPoint ipepLocal = new IPEndPoint(IPAddress.Any, m_ft_rcv_port);     // 10001 + 2
@@ -442,29 +450,35 @@ namespace WindLidarClient
             }
             return false;
         }
-
+        /**
+         * STA 파일이름을 받아서 from, to로 분리해서 리턴한다.
+         * 파일 형식 : 10_10_19_00_-_10_10_20_09.sta
+         */
         DateTime[] fromDateTimeExtract(string data)
         {
+            // sta format : 10_10_19_00_-_10_10_20_09.sta
             string toDt = null;
             string fromDt = null;
 
             string year = DateTime.Today.ToString("yyyy");
             string mon = DateTime.Today.ToString("MM");
 
-            // 03_08_18_59-03_08_25_06.sta
             string d1, d2, h1, h2, m1, m2, s1, s2;
             d1 = data.Substring(0, 2);
             h1 = data.Substring(3, 2);
             m1 = data.Substring(6, 2);
             s1 = data.Substring(9, 2);
 
-            d2 = data.Substring(12, 2);
-            h2 = data.Substring(15, 2);
-            m2 = data.Substring(18, 2);
-            s2 = data.Substring(21, 2);
+            d2 = data.Substring(14, 2);
+            h2 = data.Substring(17, 2);
+            m2 = data.Substring(20, 2);
+            s2 = data.Substring(23, 2);
 
             toDt = year + "-" + mon + "-" + d1 + " " + h1 + ":" + m1 + ":" + s1;
             fromDt = year + "-" + mon + "-" + d2 + " " + h2 + ":" + m2 + ":" + s2;
+
+            Console.WriteLine("toDt : " + toDt);
+            Console.WriteLine("fromDt : " + fromDt);
 
             DateTime[] arr = new DateTime[2];
             arr[0] =  DateTime.ParseExact(toDt, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);

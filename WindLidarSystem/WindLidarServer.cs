@@ -36,15 +36,20 @@ namespace WindLidarSystem
         }
         private List<StsInfo> stList;
         private List<FtsInfo> ftList;
+        private const int cGrip = 16;      // Grip size
+        private const int cCaption = 62;  // 2;   // Caption bar height;
 
         public WindLidarServer()
         {
             InitializeComponent();
 
-           // this.FormBorderStyle = FormBorderStyle.None;   // 윈도우 테두리 제거
-            this.Text = "";
-            this.ControlBox = false;
-            //this.FormBorderStyle = Sizeable;
+
+            //this.Text = "";
+            //this.ControlBox = false;
+
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
 
             process = null;
 
@@ -94,13 +99,30 @@ namespace WindLidarSystem
             panel1.BackgroundImage = Properties.Resources.ridar;
             panel1.BackgroundImageLayout = ImageLayout.Stretch;
 
-            panelClose.BackgroundImage = Properties.Resources.close;
-            panelClose.BackgroundImageLayout = ImageLayout.Stretch;
+            //panelClose.BackgroundImage = Properties.Resources.close;
+            //panelClose.BackgroundImageLayout = ImageLayout.Stretch;
 
-            panelHide.BackgroundImage = Properties.Resources.hide;
-            panelHide.BackgroundImageLayout = ImageLayout.Stretch;
+            //panelHide.BackgroundImage = Properties.Resources.hide;
+            //panelHide.BackgroundImageLayout = ImageLayout.Stretch;
 
+
+            lblSmall.BackColor = Color.DodgerBlue;
+            lblSmall.ForeColor = Color.White;
+            lblSmall.Cursor = Cursors.Hand;
+            lblClose.BackColor = Color.DodgerBlue;
+            lblClose.ForeColor = Color.White;
+            lblClose.Cursor = Cursors.Hand;
+
+            lblTitle.BackColor = Color.DodgerBlue;
+            lblTitle.ForeColor = Color.White;
+
+            lblTitle2.BackColor = Color.DodgerBlue;
+            lblTitle2.ForeColor = Color.White;
+
+            btnStart.Cursor = Cursors.Hand;
+            btnStop.Cursor = Cursors.Hand;
         }
+
 
         private void btnStart_Click(object sender, EventArgs e)
         {
@@ -112,16 +134,19 @@ namespace WindLidarSystem
 
                 btnStart.Enabled = false;
                 btnStop.Enabled = true;
+                statusPanel.Text = "Application started. Action Start.";
             }
         }
         private void btnStop_Click(object sender, EventArgs e)
         {
             logMessage("[WindLidarServer:Stop] Process stopping...");
+            statusPanel.Text = "Application started. Action stopping.";
             process.abort();
             process = null;
 
             btnStart.Enabled = true;
-            btnStop.Enabled = false;            
+            btnStop.Enabled = false;
+            statusPanel.Text = "Application started. Action Stop.";
         }
 
         private void createStatusBar()
@@ -211,7 +236,9 @@ namespace WindLidarSystem
             refreshWindow();
         }
 
-
+        /**
+         * 관측자료 송수신에 대한 최신 날짜를 업데이트 한다.
+         */
         public void ftsMessage(string msg)
         {
             string[] msgArr = msg.Split(delimiterChar);
@@ -230,7 +257,7 @@ namespace WindLidarSystem
             else
             {
                 int found = 0;
-                for (int i = 0; i < stList.Count(); i++)
+                for (int i = 0; i < ftList.Count(); i++)
                 {
                     if (ftList[i].s_code == item.s_code)
                     {
@@ -270,6 +297,9 @@ namespace WindLidarSystem
                     UpdateLableStcLastTime(item.s_lastDt);
                 }
 
+            }
+            for (int i=0; i<ftList.Count(); i++)
+            {
                 FtsInfo ftm = ftList[i];
 
                 if (ftm.s_code == "13211")       // 일산
@@ -540,17 +570,22 @@ namespace WindLidarSystem
             txtStsThreadTime.ReadOnly = true;
         }
 
-        private void panelClose_Click(object sender, EventArgs e)
-        {
-            // 자원 해제
-            if (btnStart.Enabled == false)
-            {
-                // 자원이 사용중이므로 자원을 해제할 수 있도록 한다.
-                btnStop.PerformClick();                
-            }
+  //      private void panelClose_Click(object sender, EventArgs e)
+  //      {
+  //          // 자원 해제
+  //          if (btnStart.Enabled == false)
+  //          {
+  //              // 자원이 사용중이므로 자원을 해제할 수 있도록 한다.
+  //              btnStop.PerformClick();                
+  //          }
+  //          Application.Exit();
+  //      }
+  //      private void panelHide_MouseClick(object sender, MouseEventArgs e)
+  //      {
+  //          this.WindowState = FormWindowState.Minimized;
+  //      }
 
-            Application.Exit();
-        }
+
 
         private void WindLidarServer_MouseDown(object sender, MouseEventArgs e)
         {
@@ -566,9 +601,62 @@ namespace WindLidarSystem
             }
         }
 
-        private void panelHide_MouseClick(object sender, MouseEventArgs e)
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            Rectangle rc = new Rectangle(this.ClientSize.Width - cGrip, this.ClientSize.Height - cGrip, cGrip, cGrip);
+            ControlPaint.DrawSizeGrip(e.Graphics, this.BackColor, rc);
+            rc = new Rectangle(0, 0, this.ClientSize.Width, cCaption);
+            Rectangle rc2 = new Rectangle(0, 0, this.ClientSize.Width, ClientSize.Height);
+            //e.Graphics.FillRectangle(Brushes.White, rc2);
+            e.Graphics.FillRectangle(Brushes.DodgerBlue, rc);   // DarkBlue, rc);
+
+
+            //e.Graphics.DrawRectangle(Pens.Black, rc2);
+
+            ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle, Color.DarkGray, ButtonBorderStyle.Solid);
+
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x84)
+            {  // Trap WM_NCHITTEST
+                Point pos = new Point(m.LParam.ToInt32() & 0xffff, m.LParam.ToInt32() >> 16);
+                pos = this.PointToClient(pos);
+                if (pos.Y < cCaption)
+                {
+                    m.Result = (IntPtr)2;  // HTCAPTION
+                    return;
+                }
+                if (pos.X >= this.ClientSize.Width - cGrip && pos.Y >= this.ClientSize.Height - cGrip)
+                {
+                    m.Result = (IntPtr)17; // HTBOTTOMRIGHT
+                    return;
+                }
+            }
+            base.WndProc(ref m);
+        }
+
+        private void lblSmall_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void lblClose_Click(object sender, EventArgs e)
+        {
+            // 자원 해제
+            if (btnStart.Enabled == false)
+            {
+                 // 자원이 사용중이므로 자원을 해제할 수 있도록 한다.
+                 btnStop.PerformClick();                
+            }
+            Application.Exit();
+        }
+
+        private void WindLidarServer_Load(object sender, EventArgs e)
+        {
+
         }
 
     }

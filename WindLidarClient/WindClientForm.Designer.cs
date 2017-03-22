@@ -30,7 +30,6 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.cboSite = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtStIP = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -49,9 +48,11 @@
             this.btnStart = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lstLog = new System.Windows.Forms.ListBox();
-            this.panelHide = new System.Windows.Forms.Panel();
-            this.panelClose = new System.Windows.Forms.Panel();
-            this.label8 = new System.Windows.Forms.Label();
+            this.lblTitle2 = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.lblSmall = new System.Windows.Forms.Label();
+            this.lblClose = new System.Windows.Forms.Label();
+            this.txtStCode = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -64,8 +65,8 @@
             this.groupBox1.Controls.Add(this.groupBox3);
             this.groupBox1.Controls.Add(this.btnStop);
             this.groupBox1.Controls.Add(this.btnStart);
-            this.groupBox1.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 29);
+            this.groupBox1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox1.Location = new System.Drawing.Point(12, 62);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(1073, 107);
             this.groupBox1.TabIndex = 0;
@@ -73,13 +74,13 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.cboSite);
+            this.groupBox4.Controls.Add(this.txtStCode);
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.txtStIP);
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.txtStPort);
             this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Font = new System.Drawing.Font("굴림", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.groupBox4.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox4.Location = new System.Drawing.Point(24, 20);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(387, 79);
@@ -87,20 +88,12 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Status Connection Info";
             // 
-            // cboSite
-            // 
-            this.cboSite.FormattingEnabled = true;
-            this.cboSite.Location = new System.Drawing.Point(86, 21);
-            this.cboSite.Name = "cboSite";
-            this.cboSite.Size = new System.Drawing.Size(287, 19);
-            this.cboSite.TabIndex = 9;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(7, 24);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(61, 11);
+            this.label7.Size = new System.Drawing.Size(61, 13);
             this.label7.TabIndex = 8;
             this.label7.Text = "Site Name";
             // 
@@ -116,7 +109,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(15, 50);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(57, 11);
+            this.label5.Size = new System.Drawing.Size(61, 13);
             this.label5.TabIndex = 4;
             this.label5.Text = "Server IP";
             // 
@@ -132,7 +125,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(207, 50);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(69, 11);
+            this.label6.Size = new System.Drawing.Size(73, 13);
             this.label6.TabIndex = 6;
             this.label6.Text = "Server Port";
             // 
@@ -146,7 +139,7 @@
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.txtID);
-            this.groupBox3.Font = new System.Drawing.Font("굴림", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.groupBox3.Font = new System.Drawing.Font("Consolas", 8.25F);
             this.groupBox3.Location = new System.Drawing.Point(489, 22);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(452, 79);
@@ -166,7 +159,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 23);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 11);
+            this.label1.Size = new System.Drawing.Size(61, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Server IP";
             // 
@@ -190,7 +183,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(234, 50);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 11);
+            this.label3.Size = new System.Drawing.Size(85, 13);
             this.label3.TabIndex = 6;
             this.label3.Text = "User Password";
             // 
@@ -199,7 +192,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(234, 23);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(69, 11);
+            this.label2.Size = new System.Drawing.Size(73, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Server Port";
             // 
@@ -208,7 +201,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(12, 50);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(46, 11);
+            this.label4.Size = new System.Drawing.Size(49, 13);
             this.label4.TabIndex = 4;
             this.label4.Text = "User ID";
             // 
@@ -244,9 +237,10 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lstLog);
-            this.groupBox2.Location = new System.Drawing.Point(12, 142);
+            this.groupBox2.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.groupBox2.Location = new System.Drawing.Point(12, 172);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1073, 604);
+            this.groupBox2.Size = new System.Drawing.Size(1073, 564);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Log Message";
@@ -262,45 +256,74 @@
             this.lstLog.Location = new System.Drawing.Point(6, 22);
             this.lstLog.Name = "lstLog";
             this.lstLog.ScrollAlwaysVisible = true;
-            this.lstLog.Size = new System.Drawing.Size(1056, 576);
+            this.lstLog.Size = new System.Drawing.Size(1056, 532);
             this.lstLog.TabIndex = 0;
             // 
-            // panelHide
+            // lblTitle2
             // 
-            this.panelHide.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelHide.Location = new System.Drawing.Point(1026, 3);
-            this.panelHide.Name = "panelHide";
-            this.panelHide.Size = new System.Drawing.Size(24, 24);
-            this.panelHide.TabIndex = 4;
-            this.panelHide.Click += new System.EventHandler(this.panelHide_Click);
+            this.lblTitle2.AutoSize = true;
+            this.lblTitle2.Font = new System.Drawing.Font("HY헤드라인M", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblTitle2.ForeColor = System.Drawing.Color.White;
+            this.lblTitle2.Location = new System.Drawing.Point(52, 38);
+            this.lblTitle2.Name = "lblTitle2";
+            this.lblTitle2.Size = new System.Drawing.Size(214, 13);
+            this.lblTitle2.TabIndex = 10;
+            this.lblTitle2.Text = "Data Transfer System(Client)";
             // 
-            // panelClose
+            // lblTitle
             // 
-            this.panelClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.panelClose.Location = new System.Drawing.Point(1056, 3);
-            this.panelClose.Name = "panelClose";
-            this.panelClose.Size = new System.Drawing.Size(24, 24);
-            this.panelClose.TabIndex = 3;
-            this.panelClose.Click += new System.EventHandler(this.panelClose_Click);
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("HY헤드라인M", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(10, 11);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(146, 27);
+            this.lblTitle.TabIndex = 9;
+            this.lblTitle.Text = "WindLidar";
             // 
-            // label8
+            // lblSmall
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("굴림", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label8.Location = new System.Drawing.Point(8, 3);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(290, 19);
-            this.label8.TabIndex = 5;
-            this.label8.Text = "자료 전송 클라이언트 프로그램";
+            this.lblSmall.AutoSize = true;
+            this.lblSmall.BackColor = System.Drawing.Color.DodgerBlue;
+            this.lblSmall.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblSmall.ForeColor = System.Drawing.Color.White;
+            this.lblSmall.Location = new System.Drawing.Point(1022, 9);
+            this.lblSmall.Name = "lblSmall";
+            this.lblSmall.Size = new System.Drawing.Size(35, 16);
+            this.lblSmall.TabIndex = 12;
+            this.lblSmall.Text = "[-]";
+            this.lblSmall.Click += new System.EventHandler(this.lblSmall_Click);
+            // 
+            // lblClose
+            // 
+            this.lblClose.AutoSize = true;
+            this.lblClose.BackColor = System.Drawing.Color.DodgerBlue;
+            this.lblClose.Font = new System.Drawing.Font("굴림", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblClose.ForeColor = System.Drawing.Color.White;
+            this.lblClose.Location = new System.Drawing.Point(1051, 9);
+            this.lblClose.Name = "lblClose";
+            this.lblClose.Size = new System.Drawing.Size(38, 16);
+            this.lblClose.TabIndex = 11;
+            this.lblClose.Text = "[X]";
+            this.lblClose.Click += new System.EventHandler(this.lblClose_Click);
+            // 
+            // txtStCode
+            // 
+            this.txtStCode.Location = new System.Drawing.Point(86, 20);
+            this.txtStCode.Name = "txtStCode";
+            this.txtStCode.Size = new System.Drawing.Size(112, 20);
+            this.txtStCode.TabIndex = 9;
             // 
             // WindClientForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1090, 766);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.panelHide);
-            this.Controls.Add(this.panelClose);
+            this.Controls.Add(this.lblSmall);
+            this.Controls.Add(this.lblClose);
+            this.Controls.Add(this.lblTitle2);
+            this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "WindClientForm";
@@ -339,11 +362,12 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtStPort;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox cboSite;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Panel panelHide;
-        private System.Windows.Forms.Panel panelClose;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblTitle2;
+        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label lblSmall;
+        private System.Windows.Forms.Label lblClose;
+        private System.Windows.Forms.TextBox txtStCode;
     }
 }
 

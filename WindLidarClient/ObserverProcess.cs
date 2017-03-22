@@ -172,11 +172,18 @@ namespace WindLidarClient
                     string msg = "ST:" + m_stCode + ":1";
                     byte[] buf = Encoding.ASCII.GetBytes(msg);
                     int stPort = System.Convert.ToInt32(m_stPort);
-                    using (UdpClient c = new UdpClient(m_cstLocalPort))  // source port
+                    try
                     {
-                        c.Send(buf, buf.Length, m_stHost, stPort);
-                        log("[ StatusSender ] " + msg);
+                        using (UdpClient c = new UdpClient(m_cstLocalPort))  // source port
+                        {
+                            c.Send(buf, buf.Length, m_stHost, stPort);
+                            log("[ StatusSender ] " + msg);
+                        }
+                    }catch(Exception ex)
+                    {
+                        log("[ StatusSender error ] : " + ex.ToString());
                     }
+
                     waitHandle.WaitOne(1000 * m_sleep_time);  // 1 minute
                 }
             }
@@ -198,18 +205,23 @@ namespace WindLidarClient
                 if (isShutdown == false)
                 {
                     almHandle.Reset();
-                    alarmProcess.clear();
-                    // 파일 존재 여부 체크
-                    bool sts = alarmProcess.almDataRead(m_sourcePath);
-                    if (sts == true)
+                    try
                     {
-                        sts = alarmProcess.almDataSend();
-                    }
-                    if (sts == true)
+                        alarmProcess.clear();
+                        // 파일 존재 여부 체크
+                        bool sts = alarmProcess.almDataRead(m_sourcePath);
+                        if (sts == true)
+                        {
+                            sts = alarmProcess.almDataSend();
+                        }
+                        if (sts == true)
+                        {
+                            sts = alarmProcess.almDataBackup();
+                        }
+                    }catch(Exception ex)
                     {
-                        sts = alarmProcess.almDataBackup();
+                        log("[ AlarmCheckProcess error ] : " + ex.ToString());
                     }
-                   
                     almHandle.WaitOne(1000 * 5);   // 5 second
                 }
             }
@@ -219,6 +231,10 @@ namespace WindLidarClient
          * 관측 데이터 송신 체크 쓰레드 함수
          * 전송 파일이 있는지 주기적으로 체크한다.
          * 이 쓰레드 함수는 개별적으로 돌아가는 함수이다.
+         * 전송하는 데이터가 옛날 데이터라면 파이을 읽는 속도를 증가시켜
+         * 이전 데이터에 대해서 서버에 빨리 전송할 수 있도록 타임아웃을 조절한다.
+         * 현재의 시간보다 2시간전 데이터이면 기존 Thread time을 적용하지 않고 
+         * 빠른 시간내에 다시 읽어서 전송할 수 있도록 한다.
          */
         public void fileCheckProcess()
         {
@@ -228,64 +244,83 @@ namespace WindLidarClient
                 if (isShutdown == false)   // debug : true
                 {
                     waitHandle.Reset();
+                    bool old_data = false;
 
-                    // 파일이 존재하고 접근, 쓸 수 있는 권한이 있는지 체크한다.
-                    // 작성 중일 때는 대기..
-                    DataProcess  dataProcess = new DataProcess(this);
-                    dataProcess.clear();
-                    dataProcess.setPath(m_sourcePath, m_backupPath);
-                    dataProcess.setNetworkInfo(m_stCode, m_stHost, m_stPort, m_cstLocalPort, m_st_rcv_port, m_ft_rcv_port);
-                    bool sts = dataProcess.HasWritePermissionOnDir(m_sourcePath);
-
-                    if (sts == true)
+                    try
                     {
-                        Console.WriteLine("[ fileCheckProcess ] Write enabled....");
-                        int fntCnt = 0;
-                        fntCnt = dataProcess.getSendFileCount();
-                        Console.WriteLine("fileCnt : " + fntCnt);
+                        // 파일이 존재하고 접근, 쓸 수 있는 권한이 있는지 체크한다.
+                        // 작성 중일 때는 대기..
+                        DataProcess dataProcess = new DataProcess(this);
+                        dataProcess.clear();
+                        dataProcess.setPath(m_sourcePath, m_backupPath);
+                        dataProcess.setNetworkInfo(m_stCode, m_stHost, m_stPort, m_cstLocalPort, m_st_rcv_port, m_ft_rcv_port);
+                        bool sts = dataProcess.HasWritePermissionOnDir(m_sourcePath);
 
-                        startProgress(0);
-                        endProgress(fntCnt);
-
-                        // 보낼 파일 개수 상태 전송
-                        if (fntCnt > 0)
+                        if (sts == true)
                         {
-                            // 상태 정보 업데이트 및 상태 정보 전송
-                            bool ok = dataProcess.startStatusSendData();
+                            Console.WriteLine("[ fileCheckProcess ] Write enabled....");
+                            int fntCnt = 0;
+                            fntCnt = dataProcess.getSendFileCount();
+                            Console.WriteLine("fileCnt : " + fntCnt);
 
-                            if (ok)
+                            startProgress(0);
+                            endProgress(fntCnt);
+
+                            // 보낼 파일 개수 상태 전송
+                            if (fntCnt > 0)
                             {
-                                // FTP 데이터 전송
-                                ok = dataProcess.ftpSend(FTP_URI, m_host, m_port, m_id, m_pass);
-                                
-                                // 데이터 백업 처리
-                                if (ok == true)
+                                // 상태 정보 업데이트 및 상태 정보 전송
+                                bool ok = dataProcess.startStatusSendData();
+
+                                if (ok)
                                 {
-                                    log("[FileMoveProcess] called....");
-                                    if (dataProcess.FileMoveProcess() == true)
+                                    // FTP 데이터 전송
+                                    ok = dataProcess.ftpSend(FTP_URI, m_host, m_port, m_id, m_pass);
+
+                                    // 데이터 백업 처리
+                                    if (ok == true)
                                     {
-                                        // 전송 완료 메시지 전송 및 자료 처리 완료 수신
-                                        ok = dataProcess.endStatusSendData();
+                                        log("[FileMoveProcess] called....");
+                                        if (dataProcess.FileMoveProcess() == true)
+                                        {
+                                            // 전송 완료 메시지 전송 및 자료 처리 완료 수신
+                                            ok = dataProcess.endStatusSendData();
+
+                                            double s1 = (DateTime.Today - dataProcess.getCheckDate()).TotalSeconds;
+                                            if (s1 > ( 60 * 60 * 2))        // 읽은 데이터가 현재보다 2시간 이전 데이터이면 오래된 데이터이므로
+                                            {
+                                                old_data = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            log("[ fileCheckProcess ] File Move fail....");
+                                        }
                                     }
                                     else
                                     {
-                                        log("[ fileCheckProcess ] File Move fail....");
+                                        log("FTP 데이터 전송 에러 : 로그 파일 확인 요망");
                                     }
                                 }
-                                else
-                                {
-                                    log("FTP 데이터 전송 에러 : 로그 파일 확인 요망");
-                                }
-                                
                             }
                         }
+                        else
+                        {
+                            Console.WriteLine("[ fileCheckProcess ] not found data...");
+                            log("[ fileCheckProcess ] No job : not found data.......");
+                        }
+                    }catch(Exception ex)
+                    {
+                        log("[ fileCheckProcess error ] : " + ex.ToString());
+                    }
+                    if (old_data == false)
+                    {
+                        waitHandle.WaitOne(1000 * m_sleep_time);  // 1 minute
                     }
                     else
                     {
-                        Console.WriteLine("[ fileCheckProcess ] not found data...");
-                        log("[ fileCheckProcess ] No job : not found data.......");
+                        waitHandle.WaitOne(1000 * 10);  // 10 second
                     }
-                    waitHandle.WaitOne(1000 * m_sleep_time);  // 1 minute
                 }
             }
         }

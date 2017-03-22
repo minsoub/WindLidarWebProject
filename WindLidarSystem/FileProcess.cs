@@ -149,8 +149,9 @@ namespace WindLidarSystem
             {
                 using (MySqlConnection conn = ConnectionPool.Instance.getConnection())
                 {
+                    // 작업처리하지 않은건(s_chk='N')과 받은 파일 개수가 0개 이상인 건을 조회해서 작업을 수행한다.
                     sql = "select no, s_code, st_time, et_time, real_file_cnt, acc_file_cnt, err_chk, s_chk, srv_file_cnt, f_name, reg_dt from T_RCV_STS ";
-                    sql += " where s_chk='N' order by reg_dt asc limit 0, 1";
+                    sql += " where s_chk='N' and acc_file_cnt > 0 and err_chk = 'N' order by reg_dt asc limit 0, 1";
 
                     oCmd = new MySqlCommand(sql, conn);
                     MySqlDataReader rs = oCmd.ExecuteReader();
@@ -210,6 +211,7 @@ namespace WindLidarSystem
 
             sendInfo = new SndDataInfo();
 
+            // FTP 전송할 파일을 읽어 들인다.
             bool ok = HasWritePermissionOnDir(info);
 
             if (ok == true)
@@ -220,11 +222,30 @@ namespace WindLidarSystem
 
                 info.srv_file_cnt = sendCount;
 
-                ok = databaseSendUpdate(info);
+                if (databaseSendUpdate(info) == true)
+                {
+                    logMsg("[ftpSendData] The data is successfully updated.["+info.s_code+"]");
 
-                ok = FileMoveProcess(info);
+                    if(FileMoveProcess(info) == true)
+                    {
+                        logMsg("[ftpSendData] The data is successfully moved in the backup directory.[" + info.s_code + "]");
+                        result = true;
+                    }else
+                    {
+                        logMsg("[ftpSendData] The job moving to the backup directory is not successed.[" + info.s_code + "]");
+                        result = false;
+                    }
+                }
+                else
+                {
+                    logMsg("[ftpSendData] The update is not successed.[" + info.s_code + "]");
 
-                result = true;
+                    result =  false;
+                }
+            }else
+            {
+                logMsg("[ftpSendData] File is not exists...[" + info.s_code + "]");
+                result = false;
             }
 
             return result;
@@ -236,7 +257,7 @@ namespace WindLidarSystem
         private bool databaseSendUpdate(StsInfo info)
         {
             bool result = false;
-            logMsg("[ FileProcess::databaseSendUpdate ] database updated => " + info.s_code + "[" + info.no + "]");
+            logMsg("[ FileProcess::databaseSendUpdate ] database updated => " + info.s_code + "[" + info.srv_file_cnt + "]");
 
             // Database에 등록한다.
             MySqlCommand oCmd = null;
@@ -254,6 +275,34 @@ namespace WindLidarSystem
             catch (MySqlException e)
             {
                 logMsg("[FileProcess::databaseSendUpdate] error : " + e.Message);
+                logMsg("[SQL] " + sql);
+                result = false;
+            }
+
+            return result;
+        }
+
+        public bool ftpFailUpdate(StsInfo info)
+        {
+            bool result = false;
+            logMsg("[ ftpFailUpdate::databaseSendUpdate ] database updated => " + info.s_code + "[" + info.srv_file_cnt + "]");
+
+            // Database에 등록한다.
+            MySqlCommand oCmd = null;
+            string sql = "";
+            try
+            {
+                using (MySqlConnection conn = ConnectionPool.Instance.getConnection())
+                {
+                    sql = String.Format("update T_RCV_STS set err_chk='Y', upt_dt=current_timestamp where no={1}", info.no);
+                    oCmd = new MySqlCommand(sql, conn);
+                    oCmd.ExecuteNonQuery();
+                    result = true;
+                }
+            }
+            catch (MySqlException e)
+            {
+                logMsg("[ftpFailUpdate::databaseSendUpdate] error : " + e.Message);
                 logMsg("[SQL] " + sql);
                 result = false;
             }
@@ -302,11 +351,15 @@ namespace WindLidarSystem
             sendInfo.m_mon = mon;
             sendInfo.m_day = day;
 
+            //Console.WriteLine("fname : " + info.f_name);
             foreach (FileInfo fi in dir.GetFiles().OrderBy(fi => fi.CreationTime))      // 날짜순 정렬
             {
                 string file = fi.FullName;
                 string ext = Path.GetExtension(file);
-                if (fi.Name == info.f_name)
+
+                //Console.WriteLine("fi : " + fi.Name + ", " + fi.FullName);
+               
+                if (ext == ".sta" && fi.Name == info.f_name)
                 {
                     sendInfo.staFileName = fi.Name;
                     sendInfo.staFullFileName = file;
@@ -335,7 +388,7 @@ namespace WindLidarSystem
             }
             if (cnt == 0)
             {
-                logMsg("[FileProcess::HasWritePermissionOnDir] Upload data does not exists");
+                logMsg("[FileProcess::HasWritePermissionOnDir] Upload data does not exists[cnt="+cnt+"]");
                 return false;
             }
 
@@ -448,13 +501,17 @@ namespace WindLidarSystem
             h1 = data.Substring(3, 2);
             m1 = data.Substring(6, 2);
             s1 = data.Substring(9, 2);
-            d2 = data.Substring(12, 2);
-            h2 = data.Substring(15, 2);
-            m2 = data.Substring(18, 2);
-            s2 = data.Substring(21, 2);
+
+            d2 = data.Substring(14, 2);
+            h2 = data.Substring(17, 2);
+            m2 = data.Substring(20, 2);
+            s2 = data.Substring(23, 2);
 
             toDt = year + "-" + mon + "-" + d1 + " " + h1 + ":" + m1 + ":" + s1;
             fromDt = year + "-" + mon + "-" + d2 + " " + h2 + ":" + m2 + ":" + s2;
+
+            Console.WriteLine("toDt : " + toDt);
+            Console.WriteLine("fromDt : " + fromDt);
 
             DateTime[] arr = new DateTime[2];
             arr[0] = DateTime.ParseExact(toDt, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
@@ -476,7 +533,7 @@ namespace WindLidarSystem
             m1 = data.Substring(6, 2);
             s1 = data.Substring(9, 2);
             dt = year + "-" + mon + "-" + d1 + " " + h1 + ":" + m1 + ":" + s1;
-            Console.WriteLine(data);
+            //Console.WriteLine(data);
 
             return DateTime.ParseExact(dt, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
         }

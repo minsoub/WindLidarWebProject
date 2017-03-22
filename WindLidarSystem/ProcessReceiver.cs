@@ -28,9 +28,6 @@ namespace WindLidarSystem
         private FileProcess ftsProcess;
         private AlarmProcess almProcess;
         private bool isShutdown;
-        private MySqlConnection oCon = null;
-
-        private string strCon;
 
         const string FTP_URI = "ftp://";
 
@@ -114,7 +111,6 @@ namespace WindLidarSystem
             server = null;
             processThread = null;
             stsThread = null;
-            oCon = null;
             stsProcess = null;
             ftsProcess = null;
             almProcess = null;
@@ -148,11 +144,12 @@ namespace WindLidarSystem
 
                                 if (sts == false)
                                 {
-                                    Console.WriteLine("ftsProcess ftpSendData false...........");
+                                    Console.WriteLine("ftsProcess ftpSendData false...........["+fileData.s_code+"]");
+                                    ftsProcess.ftpFailUpdate(fileData);
                                 }
                             }else
                             {
-                                Console.WriteLine("StsInfo is null..........");
+                                Console.WriteLine("The transfer data is not found .......");
                             }
                         //}
                     }
