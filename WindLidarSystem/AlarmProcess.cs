@@ -29,7 +29,7 @@ namespace WindLidarSystem
          * 수신 된 알람 정보를 데이터베이스에 등록한다.
          * 최신 1건 자료만 입력한다.
          */
-        public bool almMessage(string msg)
+        public bool almMessage(string msg, string clientIP)
         {
             bool result = false;
 
@@ -65,12 +65,12 @@ namespace WindLidarSystem
                     int localPort = System.Convert.ToInt32(ParamInitInfo.Instance.m_localPort);
                     int sndPort = System.Convert.ToInt32(ParamInitInfo.Instance.m_clientRcvPort);
 
-                    string sndMsg = "AM:" + arrMsg[1] + ":" + host + ":ok";
+                    string sndMsg = "AM:" + arrMsg[1] + ":" + clientIP + ":ok";
                     byte[] buf = Encoding.ASCII.GetBytes(sndMsg);
 
                     using (UdpClient c = new UdpClient(localPort))  // source port (로컬 포트에서 상태 포트를 하나 사용하므로 중복이 발생하므로 사용포트 - 1)
                     {
-                        c.Send(buf, buf.Length, host, sndPort);
+                        c.Send(buf, buf.Length, clientIP, sndPort);
                         logMsg("Send Msg [host : " + host + " : " + sndPort + " : " + sndMsg);
                     }
                 }

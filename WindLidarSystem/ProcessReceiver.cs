@@ -228,7 +228,8 @@ namespace WindLidarSystem
                     }
                     else if (msgArr[0] == "FT")   // FTP file start/end send check
                     {
-                        bool bl = ftsProcess.fileStsUpdate(msg);
+                        string client_ip = RemoteIpEndPoint.Address.ToString();
+                        bool bl = ftsProcess.fileStsUpdate(msg, client_ip);
                         if (bl == true)
                         {
                             log("[ ProcessReceiver::ReceiverClient(info) ] file data status update [ok]");
@@ -239,7 +240,11 @@ namespace WindLidarSystem
                     }
                     else if (msgArr[0] == "AM")   // Alarm message
                     {
-                        bool bl = almProcess.almMessage(msg);
+
+                        string client_ip = RemoteIpEndPoint.Address.ToString();
+
+                        log("client ip : " + client_ip);
+                        bool bl = almProcess.almMessage(msg, client_ip);
 
                     }
                     //Process codes

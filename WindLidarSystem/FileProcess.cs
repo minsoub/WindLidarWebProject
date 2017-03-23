@@ -33,7 +33,7 @@ namespace WindLidarSystem
             sendInfo.iniFileName = null;
             sendInfo.fileCount = 0;
         }
-        public bool fileStsUpdate(string msg)
+        public bool fileStsUpdate(string msg, string client_ip)
         {
             bool result = false;
             //FT:관측소ID:IP ADDR:시작시각:종료시각:파일개수:파일명:P1:P2:P3:P4:P5:S  => START
@@ -75,7 +75,7 @@ namespace WindLidarSystem
                         oCmd = new MySqlCommand(sql, conn);
                         oCmd.ExecuteNonQuery();
 
-                        udpOkSend(arrMsg[1], arrMsg[2]);
+                        udpOkSend(arrMsg[1], arrMsg[2], client_ip);
 
                     }
                     else
@@ -112,7 +112,7 @@ namespace WindLidarSystem
                             oCmd = new MySqlCommand(sql, conn);
                             oCmd.ExecuteNonQuery();
 
-                            udpOkSend(arrMsg[1], arrMsg[2]);
+                            udpOkSend(arrMsg[1], arrMsg[2], client_ip);
                         }
                         else
                         {
@@ -186,7 +186,7 @@ namespace WindLidarSystem
 
 
 
-        public void udpOkSend(string s_code, string host)
+        public void udpOkSend(string s_code, string host, string client_ip)
         {
             // Client에 전송한다.
             int localPort = System.Convert.ToInt32(ParamInitInfo.Instance.m_localPort);        // 10004
@@ -197,8 +197,8 @@ namespace WindLidarSystem
 
             using (UdpClient c = new UdpClient(localPort+1))  // source port (로컬 포트에서 상태 포트를 하나 사용하므로 중복이 발생하므로 사용포트 - 1)
             {
-                c.Send(buf, buf.Length, host, sndPort);
-                logMsg("[FileProcess::udpOkSend] Send Msg [host : " + host + " : " + sndPort + " : " + sndMsg);
+                c.Send(buf, buf.Length, client_ip, sndPort);
+                logMsg("[FileProcess::udpOkSend] Send Msg [host : " + client_ip + " : " + sndPort + " : " + sndMsg);
             }
         }
 
