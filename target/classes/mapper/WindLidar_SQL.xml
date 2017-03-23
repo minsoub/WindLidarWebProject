@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ 
+<mapper namespace="windlidar">
+	<select id="selectLidarList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+					NO,
+					S_CODE,
+					S_YEAR,
+					S_MON,
+					S_DAY,
+					S_HOUR,
+					S_MIN,
+					S_SEC,
+					FILE_CNT,
+					USE_CHK,
+					REG_DT,
+					UPT_DT
+			FROM
+			   T_RCV_INFO
+			ORDER BY REG_DT ASC
+		]]>
+	</select>
+	
+	<select id="selectMemberList" parameterType="hashmap" resultType="hashmap">
+			<![CDATA[
+			SELECT
+					ID,
+					NAME,
+					PASS,
+					EMAIL,
+					AUTH_CHK,
+					LAST_DT,
+					REG_DT
+			FROM
+			   T_USR_INFO
+			ORDER BY REG_DT ASC
+		]]>
+	</select>
+	
+	<select id="selectMemberDetail" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+					ID,
+					NAME,
+					PASS,
+					EMAIL,
+					AUTH_CHK,
+					LAST_DT,
+					REG_DT
+			FROM
+			   T_USR_INFO
+			WHERE ID=#{IDX}
+		]]>
+	</select>
+	
+	<insert id="insertMember" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO T_USR_INFO
+			(
+			    ID,
+			    NAME,
+			    PASS,
+			    EMAIL,
+			    AUTH_CHK,
+			    REG_DT
+			) VALUES (
+				#{id},
+				#{name},
+				#{pass},
+				#{email},
+				#{auth_chk},
+				current_timestamp
+			)
+		]]>
+	</insert>
+	
+	<update id="updateMember" parameterType="hashmap">
+		<![CDATA[
+			UPDATE T_USR_INFO
+			   SET
+					NAME = #{name} ,
+					PASS = #{pass} ,
+					EMAIL = #{email} ,
+					AUTH_CHK = #{auth_chk}
+			WHERE ID = #{IDX}
+		]]>	
+	</update>
+	
+	<delete id="deleteMember" parameterType="hashmap">
+		<![CDATA[
+			DELETE FROM T_USR_INFO
+			 WHERE ID = #{IDX}
+		]]>	
+	</delete>
+		
+</mapper> 
