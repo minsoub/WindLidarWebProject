@@ -7,7 +7,7 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3303/windlidarDB" />
+		<property name="url" value="jdbc:mysql://10.23.14.146:3303/windlidarDB" />
 		<property name="username" value="histUser" />
 		<property name="password" value="hist123" />
 	</bean>

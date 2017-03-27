@@ -51,8 +51,16 @@ public class WindLidarController {
 				log.debug("key : " + entry.getKey()+", value : " + entry.getValue());
 			}			
 		}
-		return mv;
+		return mv; 
 	}
+	 
+	@RequestMapping(value="/index.do") 
+	public ModelAndView index(CommandMap commandMap) throws Exception
+	{
+		ModelAndView mv = new ModelAndView("home");
+		
+		return mv; 
+	}  
 	
 	
 }

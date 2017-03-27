@@ -96,4 +96,62 @@
 		]]>	
 	</delete>
 		
+		
+	<select id="selectMemberLogin" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+					ID,
+					NAME,
+					PASS,
+					EMAIL,
+					AUTH_CHK,
+					LAST_DT,
+					REG_DT
+			FROM
+			   T_USR_INFO
+			WHERE ID = #{id} 
+			  AND PASS = #{pass}
+		]]>
+	</select>
+	
+	<select id="selectScanList" parameterType="hashmap" resultType="hashmap">
+			SELECT
+					NO,
+					S_CODE,
+					ST_TIME,
+					ET_TIME,
+					( 
+					   CASE P_TYPE
+					    WHEN 0 THEN 'PPI'
+					    WHEN 1 THEN 'RHI'
+					    WHEN 2 THEN 'LOS'
+					    WHEN 3 THEN 'DBS'
+					   END
+					) AS P_TYPE,
+					P_PAM1,
+					P_PAM2,
+					P_PAM3,
+					P_PAM4,
+					AVT_TM,
+					REG_dt
+			  FROM  T_RCV_PARAM_INFO
+			 WHERE  1 = 1
+	  <if test="s_code != null">
+	           AND  S_CODE = #{s_code}
+	  </if>
+      <if test="s_date != null">
+              AND DATE_FORMAT(st_time, '%Y-%m-%d') = #{s_date}
+      </if>
+  			 
+			 ORDER BY NO DESC 
+			 LIMIT ${listNum}, 10
+	</select>
+	<select id="selectScanCount" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+			SELECT
+					COUNT(NO) AS CNT
+			  FROM  T_RCV_PARAM_INFO
+			 WHERE  S_CODE = #{s_code}
+		]]>	
+	</select>
 </mapper> 
