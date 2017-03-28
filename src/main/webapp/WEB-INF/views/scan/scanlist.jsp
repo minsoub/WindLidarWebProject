@@ -13,7 +13,7 @@
    <table class="searchList">
    <thead>
      <th width="100">관측소별</th>
-     <th><select id="s_code" name="s_code">
+     <th><select id="s_code">
          <option value="13211">일산(13211)</option>
          <option value="13210">송도(13210)</option>
          <option value="13206">구로(13206)</option>
@@ -21,7 +21,7 @@
      </th>
      <th width="80">날자</th>
      <th>
-       <input type="text" id="datepicker1" readonly>
+       <input type="text" id="s_date"  readonly value="${commandMap.s_date}">
      </th>
      <th>
      <a href="#this" class="btn" id="search">검색</a>
@@ -115,7 +115,7 @@
 	<script type="text/javascript">
 
 	    $(function() {
-	       $( "#datepicker1" ).datepicker({
+	       $( "#s_date" ).datepicker({
 	          dateFormat: 'yy-mm-dd'
 	       });
 	    });
@@ -128,7 +128,7 @@
 			
 			$("#search").on("click", function(e){ //글쓰기 버튼
 				e.preventDefault();
-				fn_search($(this));
+				fn_search();
 			});	
 		});
 	
@@ -136,6 +136,13 @@
 			var comSubmit = new ComSubmit("frm");
 			comSubmit.setUrl("<c:url value='/scanList.do' />"); 
 			comSubmit.addParam("page", page);
+			comSubmit.addParam("s_code", $("#s_code").val());
+			
+			if ($("#s_date").val() != "")
+			{
+				comSubmit.addParam("s_date", $("#s_date").val());
+				comSubmit.addParam("s_mode", "search");
+			}
 			comSubmit.submit();
 		}
 		
@@ -143,27 +150,22 @@
 		{
 			var comSubmit = new ComSubmit("frm");
 			comSubmit.setUrl("<c:url value='/scanList.do' />"); 
-			//comSubmit.addParam("page", page);
+			comSubmit.addParam("s_code", $("#s_code").val());
 			comSubmit.submit();
 		}
 		
-		function fn_search(obj)
+		function fn_search()
 		{
+			
 			var comSubmit = new ComSubmit("frm");
 			comSubmit.setUrl("<c:url value='/scanList.do' />"); 
 			//comSubmit.addParam("page", page);
-			comSubmit.addParam("s_code", obj.parent().find("#s_code").val());
-			comSubmit.addParam("s_date", obj.parent().find("#s_date").val());
+			comSubmit.addParam("s_code", $("#s_code").val());
+			comSubmit.addParam("s_date", $("#s_date").val());
 			comSubmit.addParam("s_mode", "search");
 			comSubmit.submit();
 		}
 		
-		function fn_openBoardDetail(obj){
-			var comSubmit = new ComSubmit();
-			comSubmit.setUrl("<c:url value='/userDetailInfo.do' />");
-			comSubmit.addParam("IDX", obj.parent().find("#IDX").val());
-			comSubmit.submit();
-		}
 	</script>	
 </body>
 </html>

@@ -26,4 +26,14 @@ public class LoginServiceImpl implements LoginService {
 		return loginDAO.selectLoginInfo(commandMap);
 	}
 
+	/**
+	 * ID 정보를 가지고 사용자 최종 접속시간을 업데이트 한다.
+	 * 
+	 */
+	@Override
+	public boolean updateLoginInfo(String _id) throws Exception {
+		// TODO Auto-generated method stub
+		return loginDAO.updateLoginInfo(_id);
+	}
+
 }

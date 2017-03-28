@@ -55,6 +55,10 @@ public class ScanController {
 		log.info("start : " + commandMap.get("start"));
 		log.info("end : " + commandMap.get("end"));
 		
+		log.info("s_code : " + commandMap.get("s_code"));
+		log.info("s_date : " + commandMap.get("s_date"));
+		log.info("s_mode : " + commandMap.get("s_mode"));
+		
 		if (commandMap.get("start") == null) commandMap.put("start", 0);
 		commandMap.put("listNum", (Integer.parseInt(commandMap.get("page").toString()) - 1) * 10);
 		

@@ -5,14 +5,25 @@
 <%@ include file="/WEB-INF/include/header.jsp" %>
 </head>
 <body>
-    <form id="frm">
+
+	<table class="headList">
+	<thead>
+	<th>
+	<h2><c:if test="${empty info.ID}">사용자 등록</c:if><c:if test="${not empty info}">사용자 정보 수정</c:if></h2>
+   </th>
+   </thead>
+   </table>
+   
+   
+
+   
         <table class="board_view">
+         <form id="frm">
         <input type="hidden" name="IDX" id="IDX" value="${info.ID }">
             <colgroup>
                 <col width="20%">
                 <col width="*"/>
             </colgroup>
-            <caption>사용자 등록</caption>
             <tbody>
                 <tr>
                     <th scope="row">사용자 아이디</th>
@@ -40,14 +51,37 @@
                 </tr>                
             </tbody>
         </table>
+  	<table class="btnList">
+	<thead>
+	<th>
+	  <th>
+<c:if test="${not empty commandMap.Auth}">
+   <c:if test="${commandMap.Auth == '2' }">
         <c:if test="${empty info.ID}"><a href="#this" class="btn" id="write">사용자 등록</a></c:if> 
-        <a href="#this" class="btn" id="update" >정보수정</a>
+        <c:if test="${not empty info}"><a href="#this" class="btn" id="update" >정보수정</a></c:if>
         <c:if test="${not empty info}"><a href="#this" class="btn" id="delete">삭제하기</a></c:if>
         <a href="#this" class="btn" id="list" >목록으로</a>
+   </c:if>
+   <c:if test="${commandMap.Auth != '2' }">
+        <c:if test="${empty info.ID}"><a href="#this" class="btn" id="write">사용자 등록</a></c:if> 
+        <c:if test="${not empty info}"><a href="#this" class="btn" id="update" >정보수정</a></c:if>
+   </c:if>
+</c:if>
+
+ 	   </th>
+   </thead>
+   </table>
     </form>
     <%@ include file="/WEB-INF/include/body.jsp" %>
     <script type="text/javascript">
         $(document).ready(function(){
+
+			if ("${commandMap.msg}" != "")
+			{
+				alert("${commandMap.msg}");
+			} 
+
+			
         	$("#list").on("click", function(e){
         		e.preventDefault();
         		fn_openMemberList();

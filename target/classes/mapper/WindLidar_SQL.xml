@@ -56,6 +56,15 @@
 		]]>
 	</select>
 	
+	<update id="updateMemberTime" parameterType="hashmap">
+		<![CDATA[
+			UPDATE T_USR_INFO
+			   SET
+					LAST_DT = current_timestamp 
+			WHERE ID = #{_id}
+		]]>	
+	</update>
+	
 	<insert id="insertMember" parameterType="hashmap">
 		<![CDATA[
 			INSERT INTO T_USR_INFO

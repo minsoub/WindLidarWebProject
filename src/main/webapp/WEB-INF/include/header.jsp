@@ -47,8 +47,8 @@
 	<th scope="col">시간대별 통계</th>
 	<th scope="col">일별통계</th>
 	<th scope="col">월별통계</th>
-	<th scope="col">계정관리</th>
-	<th scope="col">[ <a href="/logout.do">로그아웃( <%=((SessionClass)session.getAttribute("user")).getName()%> )</a> ]</th>
+	<th scope="col"><a href="<c:url value='/memberList.do'/>">계정관리</a></th>
+	<th scope="col">[ <a href="<c:url value='/logout.do' />">로그아웃( <%=((SessionClass)session.getAttribute("user")).getName()%> )</a> ]</th>
 	</tr>
 <%	  
   }

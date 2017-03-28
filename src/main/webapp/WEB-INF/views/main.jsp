@@ -32,7 +32,13 @@
 	<%@ include file="/WEB-INF/include/body.jsp" %>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#login").on("click", function(e){ //글쓰기 버튼
+			
+			if ("${commandMap.msg}" != "")
+			{
+				alert("${commandMap.msg}");
+			} 
+			
+			$("#login").on("click", function(e){ //로그인 하기  버튼
 				e.preventDefault();
 				fn_loginProcess();
 			});	

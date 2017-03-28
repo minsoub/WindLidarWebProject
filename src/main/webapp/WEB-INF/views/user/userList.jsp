@@ -2,13 +2,21 @@
 
 <%@ include file="/WEB-INF/include/header.jsp" %>
 
+	<table class="headList">
+	<thead>
+	<th>
 	<h2>사용자 관리</h2>
+   </th>
+   </thead>
+   </table>
+   
+
 	<table class="board_list">
 		<colgroup>
 			<col width="5%"/>
-			<col width="15"/>
 			<col width="15%"/>
-			<col width="25%"/>
+			<col width="15%"/>
+			<col width="20%"/>
 			<col width="25%"/>
 			<col width="15%"/>
 		</colgroup>
@@ -25,9 +33,9 @@
 		<tbody>
 			<c:choose>
 				<c:when test="${fn:length(list) > 0}">
-					<c:forEach items="${list}" var="row">
+					<c:forEach items="${list}" var="row"  varStatus="status">
 						<tr>
-							<td>${fn:length(list) - row.index }</td>							
+							<td>${fn:length(list) - status.index }</td>							
 							<td class="title">
 								<a href="#this" name="title">${row.ID }</a>
 								<input type="hidden" id="IDX" value="${row.ID }">
@@ -47,9 +55,16 @@
 			</c:choose>
 		</tbody>
 	</table>
-	<br/>
+  	<table class="btnList">
+	<thead>
+	<th>
+	  <th>
 	<a href="#this" class="btn" id="write">사용자 등록</a>
-	
+ 	   </th>
+   </thead>
+   </table>
+   
+   
 	<%@ include file="/WEB-INF/include/body.jsp" %>
 	<script type="text/javascript">
 		$(document).ready(function(){
