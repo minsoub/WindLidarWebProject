@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.hist.windlidar.common.CommandMap;
+import com.hist.windlidar.common.CommonUtil;
 import com.hist.windlidar.service.WindLidarService;
 
 @Controller
@@ -54,6 +55,40 @@ public class WindLidarController {
 		return mv; 
 	}
 	 
+	/**
+	 * 시간대별 관측자료 수신 통계 조회 Controller 메소드
+	 * 검색 조건 : 파라미터, 일자별  검색
+	 * 
+	 * @param commandMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/windLidarHList.do")
+	public ModelAndView windLidarListPerHour(CommandMap commandMap) throws Exception
+	{
+		ModelAndView mv = new ModelAndView("/data/dataHourList");
+		
+		if (commandMap.get("s_code") == null)
+		{
+			commandMap.put("s_code", 13211);
+		}
+		if (commandMap.get("s_date") == null)
+		{
+			commandMap.put("s_date", CommonUtil.getInstance().getCurrentDate());  // 금일 날짜
+		}
+		log.info("s_code : " + commandMap.get("s_code"));
+		log.info("s_date : " + commandMap.get("s_date"));
+		List<Map<String, Object>> list = windLidarService.windLidarListPerHourSearch(commandMap.getMap());
+		
+		// 결과를 클라이언트에 전달
+		mv.addObject("list", list);
+		mv.addObject("commandMap", commandMap.getMap()); 
+		
+		
+		return mv;
+	}
+	
+	
 	@RequestMapping(value="/index.do") 
 	public ModelAndView index(CommandMap commandMap) throws Exception
 	{
