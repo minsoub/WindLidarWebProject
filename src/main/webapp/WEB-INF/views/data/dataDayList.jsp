@@ -5,7 +5,7 @@
 	<table class="headList">
 	<thead>
 	<th>
-	<h2>시간대별 관측자료 수신 통계 - 일산(13211)</h2>
+	<h2>일자별 관측자료 수신 통계 - 일산(13211)</h2>
    </th>
    </thead>
    </table>
@@ -32,24 +32,60 @@
    	
 	<table class="scan_list">
 		<colgroup>
-			<col width="20%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="20%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
+			<col width="3.84%"/>
 		</colgroup>
 		<thead>
 			<tr>
-				<th scope="col">시간대별</th>
-				<th scope="col">0 ~ 10분</th>
-				<th scope="col">10 ~ 20분</th>
-				<th scope="col">20 ~ 30분</th>
-				<th scope="col">30 ~ 40분</th>
-				<th scope="col">40 ~ 50분</th>
-				<th scope="col">50 ~ 60분</th>
+				<th scope="col">일자</th>
+				<th scope="col">00시</th>
+				<th scope="col">01시</th>
+				<th scope="col">02시</th>
+				<th scope="col">03시</th>
+				<th scope="col">04시</th>
+				<th scope="col">05시</th>
+				<th scope="col">06시</th>
+				<th scope="col">07시</th>
+				<th scope="col">08시</th>
+				<th scope="col">09시</th>
+				<th scope="col">10시</th>
+				<th scope="col">11시</th>
+				<th scope="col">12시</th>
+				<th scope="col">13시</th>
+				<th scope="col">14시</th>
+				<th scope="col">15시</th>
+				<th scope="col">16시</th>
+				<th scope="col">17시</th>
+				<th scope="col">18시</th>
+				<th scope="col">19시</th>
+				<th scope="col">20시</th>
+				<th scope="col">21시</th>
+				<th scope="col">22시</th>
+				<th scope="col">23시</th>
 				<th scope="col">수신율</th>
 			</tr>
 		</thead>
@@ -58,20 +94,39 @@
 				<c:when test="${fn:length(list) > 0}">
 					<c:forEach items="${list}" var="row" varStatus="status">
 						<tr>
-							<td>${row.ST_TIME}시 ~ </td>						
-							<td><c:if test="${row.DIS1 == 1}">O</c:if><c:if test="${row.DIS1 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS2 == 1}">O</c:if><c:if test="${row.DIS2 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS3 == 1}">O</c:if><c:if test="${row.DIS3 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS4 == 1}">O</c:if><c:if test="${row.DIS4 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS5 == 1}">O</c:if><c:if test="${row.DIS5 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS6 == 1}">O</c:if><c:if test="${row.DIS6 == 0}">x</c:if></td>
-							<td>${row.RATE}%</td>
+							<td>${row.ST_DAY}일</td>	
+							<td>${row.H_TIME00}</td>				
+							<td>${row.H_TIME01}</td>
+							<td>${row.H_TIME02}</td>
+							<td>${row.H_TIME03}</td>
+							<td>${row.H_TIME04}</td>
+							<td>${row.H_TIME05}</td>
+							<td>${row.H_TIME06}</td>
+							<td>${row.H_TIME07}</td>
+							<td>${row.H_TIME08}</td>
+							<td>${row.H_TIME09}</td>
+							<td>${row.H_TIME10}</td>
+							<td>${row.H_TIME11}</td>
+							<td>${row.H_TIME12}</td>
+							<td>${row.H_TIME13}</td>
+							<td>${row.H_TIME14}</td>
+							<td>${row.H_TIME15}</td>
+							<td>${row.H_TIME16}</td>
+							<td>${row.H_TIME17}</td>
+							<td>${row.H_TIME18}</td>
+							<td>${row.H_TIME19}</td>
+							<td>${row.H_TIME20}</td>
+							<td>${row.H_TIME21}</td>
+							<td>${row.H_TIME22}</td>
+							<td>${row.H_TIME23}</td>
+								
+							<td>${row.AVG}</td>
 						</tr>
 					</c:forEach>
 				</c:when>
 				<c:otherwise>
 					<tr>
-						<td colspan="8">조회된 결과가 없습니다.</td>
+						<td colspan="26">조회된 결과가 없습니다.</td>
 					</tr>
 				</c:otherwise>
 			</c:choose>
@@ -127,7 +182,10 @@
 		{
 			var comSubmit = new ComSubmit("frm");
 			comSubmit.setUrl("<c:url value='/windLidarHList.do' />"); 
-			comSubmit.addParam("s_code", $("#s_code").val());
+			if ($("#s_code").val() != "")
+			{
+				comSubmit.addParam("s_code", $("#s_code").val());
+			}
 			comSubmit.addParam("s_date", $("#s_date").val());
 			comSubmit.addParam("s_mode", "search");
 			comSubmit.submit();

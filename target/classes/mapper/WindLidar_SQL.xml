@@ -5,77 +5,174 @@
 <mapper namespace="windlidar">
     <select id="selectWindLidarPerHour" parameterType="hashmap" resultType="hashmap">
  		<![CDATA[   
- SELECT
-       #{HOURTOFROM} as HM, 
-       IFNULL(t1, "00~09") t1, IFNULL(t2, "10~19") t2,  IFNULL(t3, "20~29") t3, IFNULL(t4, "30~39") t4, IFNULL(t5, "40~49") t5, IFNULL(t6, "50~59") t6, 
-       IFNULL(r1,  0) r1, IFNULL(r2, 0) r2, IFNULL(r3, 0) r3, IFNULL(r4, 0) r4, IFNULL(r5, 0) r5, IFNULL(r6, 0) r6,
-       IFNULL(a1,  0) a1, IFNULL(a2, 0) a2, IFNULL(a3, 0) a3, IFNULL(a4, 0) a4, IFNULL(a5, 0) a5, IFNULL(a6, 0) a6,
-       IFNULL(s1,  0) s1, IFNULL(s2, 0) s2, IFNULL(s3, 0) s3, IFNULL(s4, 0) s4, IFNULL(s5, 0) s5, IFNULL(s6, 0) s6,
-       
+
+SELECT A AS ST_TIME, IFNULL(B.R, 0) RATE,  IFNULL(B.r_display1, 0) DIS1, IFNULL(B.r_display2, 0) DIS2, 
+       IFNULL(B.r_display3, 0) DIS3, IFNULL(B.r_display4, 0) DIS4, IFNULL(B.r_display5, 0) DIS5, IFNULL(B.r_display6, 0) DIS6
+  FROM (
+          SELECT '01' a union all SELECT '02' a union all SELECT '03' a union all SELECT '04' a union all SELECT '05' a union all
+          SELECT '06' a union all SELECT '07' a union all SELECT '08' a union all SELECT '09' a union all SELECT '10' a union all
+          SELECT '11' a union all SELECT '12' a union all SELECT '13' a union all SELECT '14' a union all SELECT '15' a union all
+          SELECT '16' a union all SELECT '17' a union all SELECT '18' a union all SELECT '19' a union all SELECT '20' a union all
+          SELECT '21' a union all SELECT '22' a union all SELECT '23' 
+) TMP_TABLE
+
+LEFT JOIN 
+
+(
+select
+        st_time,    ROUND(
+		                    (
+								   IFNULL(ROUND(r1/s1 * 100, 2), 0) + IFNULL(ROUND(r2/s2 * 100, 2), 0) + IFNULL(ROUND(r3/s3 * 100, 2), 0) + 
+		                     IFNULL(ROUND(r4/s4 * 100, 2), 0) + IFNULL(ROUND(r5/s5 * 100, 2), 0) + IFNULL(ROUND(r6/s6 * 100, 2), 0)
+									)/6, 2
+						  ) AS R,
+		              
        CASE WHEN IFNULL(r1, 0) != 0 and IFNULL(r1, 0) = IFNULL(s1, 0) THEN '1' ELSE '0' END AS r_display1, 
        CASE WHEN IFNULL(r2, 0) != 0 and IFNULL(r2, 0) = IFNULL(s2, 0) THEN '1' ELSE '0' END AS r_display2, 
        CASE WHEN IFNULL(r3, 0) != 0 and IFNULL(r3, 0) = IFNULL(s3, 0) THEN '1' ELSE '0' END AS r_display3,
 		 CASE WHEN IFNULL(r4, 0) != 0 and IFNULL(r4, 0) = IFNULL(s4, 0) THEN '1' ELSE '0' END AS r_display4,
 		 CASE WHEN IFNULL(r5, 0) != 0 and IFNULL(r5, 0) = IFNULL(s5, 0) THEN '1' ELSE '0' END AS r_display5, 
-		 CASE WHEN IFNULL(r6, 0) != 0 and IFNULL(r6, 0) = IFNULL(s6, 0) THEN '1' ELSE '0' END AS r_display6,   
-       ROUND(IFNULL(( IFNULL(r1/s1 * 100, 0) + IFNULL(r2/s2 * 100, 0) + IFNULL(r3/s3 * 100, 0) + IFNULL(r4/s4 * 100, 0) + IFNULL(r5/s5 * 100, 0) + IFNULL(r6/s6 * 100, 0) ) / 6, 0), 2) AS r_rate
-  FROM 
-  (
-    SELECT
-          case when  ( DATE_FORMAT(st_time, '%i') between  '00' and '09') THEN "00~09" END AS t1,
-          case when ( DATE_FORMAT(st_time, '%i') between  '00' and '09') THEN sum(real_file_cnt) END AS r1,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '00' and '09') THEN sum(acc_file_cnt)  END AS a1,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '00' and '09') THEN sum(srv_file_cnt)  END AS s1		     
-     FROM T_RCV_STS
-    WHERE DATE_FORMAT(st_time, '%Y-%m-%d %H') = #{S_DT} AND (DATE_FORMAT(st_time, '%i') between  '00' and '09') AND s_code = #{s_code}
-  ) a,
-  ( 
-    SELECT
-          case when ( DATE_FORMAT(st_time, '%i') between  '10' and '19') THEN "10~19" END AS t2,
-          case when ( DATE_FORMAT(st_time, '%i') between  '10' and '19') THEN sum(real_file_cnt) END AS r2,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '10' and '19') THEN sum(acc_file_cnt)  END AS a2,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '10' and '19') THEN sum(srv_file_cnt)  END AS s2			     
-     FROM T_RCV_STS
-    WHERE DATE_FORMAT(st_time, '%Y-%m-%d %H') = #{S_DT} AND (DATE_FORMAT(st_time, '%i') between  '10' and '19') AND s_code = #{s_code}
- ) b,
- ( 
-    SELECT
-          case when ( DATE_FORMAT(st_time, '%i') between  '20' and '29') THEN "20~29" END AS t3,
-          case when ( DATE_FORMAT(st_time, '%i') between  '20' and '29') THEN sum(real_file_cnt) END AS r3,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '20' and '29') THEN sum(acc_file_cnt)  END AS a3,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '20' and '29') THEN sum(srv_file_cnt)  END AS s3			     
-     FROM T_RCV_STS
-    WHERE DATE_FORMAT(st_time, '%Y-%m-%d %H') = #{S_DT} AND (DATE_FORMAT(st_time, '%i') between  '20' and '29') AND s_code = #{s_code}
- ) c ,
-  ( 
-    SELECT
-          case when ( DATE_FORMAT(st_time, '%i') between  '30' and '39') THEN "30~39" END AS t4,
-          case when ( DATE_FORMAT(st_time, '%i') between  '30' and '39') THEN sum(real_file_cnt) END AS r4,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '30' and '39') THEN sum(acc_file_cnt)  END AS a4,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '30' and '39') THEN sum(srv_file_cnt)  END AS s4			     
-     FROM T_RCV_STS
-    WHERE DATE_FORMAT(st_time, '%Y-%m-%d %H') = #{S_DT} AND (DATE_FORMAT(st_time, '%i') between  '30' and '39') AND s_code = #{s_code}
- ) d,
-  ( 
-    SELECT
-          case when ( DATE_FORMAT(st_time, '%i') between  '40' and '49') THEN "40~49" END AS t5,
-          case when ( DATE_FORMAT(st_time, '%i') between  '40' and '49') THEN sum(real_file_cnt) END AS r5,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '40' and '49') THEN sum(acc_file_cnt)  END AS a5,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '40' and '49') THEN sum(srv_file_cnt)  END AS s5			     
-     FROM T_RCV_STS
-    WHERE DATE_FORMAT(st_time, '%Y-%m-%d %H') = #{S_DT} AND (DATE_FORMAT(st_time, '%i') between  '40' and '49') AND s_code = #{s_code}
- ) e, 
-  ( 
-    SELECT
-          case when ( DATE_FORMAT(st_time, '%i') between  '50' and '59') THEN "50~59" END AS t6,
-          case when ( DATE_FORMAT(st_time, '%i') between  '50' and '59') THEN sum(real_file_cnt) END AS r6,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '50' and '59') THEN sum(acc_file_cnt)  END AS a6,
-			 case when ( DATE_FORMAT(st_time, '%i') between  '50' and '59') THEN sum(srv_file_cnt)  END AS s6			     
-     FROM T_RCV_STS
-    WHERE DATE_FORMAT(st_time, '%Y-%m-%d %H') = #{S_DT} AND (DATE_FORMAT(st_time, '%i') between  '50' and '59') AND s_code = #{s_code}
- ) f
+       CASE WHEN IFNULL(r6, 0) != 0 and IFNULL(r6, 0) = IFNULL(s6, 0) THEN '1' ELSE '0' END AS r_display6,   
+ 
+ 
+		  r1, r2, r3, r4, r5, r6, s1, s2, s3, s4, s5, s6, ROUND( ( ( (r1+r2+r3+r4+r5+r6) / (s1+s2+s3+s4+s5+s6) ) * 100) / 6, 2) as dd
+ from (
+select
+      DATE_FORMAT(st_time, '%H') st_time, 
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '00' AND '09'), (real_file_cnt), 0)) r1,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '10' AND '19'), (real_file_cnt), 0)) r2,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '20' AND '29'), (real_file_cnt), 0)) r3,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (real_file_cnt), 0)) r4,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (real_file_cnt), 0)) r5,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (real_file_cnt), 0)) r6,
+      
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '00' AND '09'), (srv_file_cnt), 0)) s1,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '10' AND '19'), (srv_file_cnt), 0)) s2,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '20' AND '29'), (srv_file_cnt), 0)) s3,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (srv_file_cnt), 0)) s4,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
+      SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
+      
+from t_rcv_sts
+WHERE DATE_FORMAT(st_time, '%Y-%m-%d') = #{s_date} 
+  AND S_CODE = #{s_code}
+GROUP BY DATE_FORMAT(st_time, '%Y-%m-%d %H')
+) STS_TABLE
+) B ON TMP_TABLE.A = B.ST_TIME
  
 		]]>    
+    </select>
+    
+    <select id="selectWindLidarPerDay" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[
+SELECT
+      ST_DAY,  H_TIME, 
+      ROUND(
+		      (
+								   IFNULL(ROUND(r1/s1 * 100, 2), 0) + IFNULL(ROUND(r2/s2 * 100, 2), 0) + IFNULL(ROUND(r3/s3 * 100, 2), 0) + 
+		                     IFNULL(ROUND(r4/s4 * 100, 2), 0) + IFNULL(ROUND(r5/s5 * 100, 2), 0) + IFNULL(ROUND(r6/s6 * 100, 2), 0)
+									)/6, 2
+				) AS RATE
+ FROM (
+       SELECT
+              DATE_FORMAT(st_time, '%Y-%m-%d') AS ST_DAY, 
+		        DATE_FORMAT(st_time, '%H') h_time, 
+	 	        DATE_FORMAT(st_time, '%Y-%m-%d %H') AS ST_TIME,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '00' AND '09'), (real_file_cnt), 0)) r1,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '10' AND '19'), (real_file_cnt), 0)) r2,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '20' AND '29'), (real_file_cnt), 0)) r3,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (real_file_cnt), 0)) r4,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (real_file_cnt), 0)) r5,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (real_file_cnt), 0)) r6,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '00' AND '09'), (srv_file_cnt), 0)) s1,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '10' AND '19'), (srv_file_cnt), 0)) s2,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '20' AND '29'), (srv_file_cnt), 0)) s3,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (srv_file_cnt), 0)) s4,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
+              SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
+       FROM T_RCV_STS
+      WHERE DATE_FORMAT(st_time, '%Y-%m') = #{s_date} 
+        AND S_CODE = #{s_code}
+      GROUP BY DATE_FORMAT(st_time, '%Y-%m-%d %H')
+ ) TST
+ ORDER BY ST_DAY, H_TIME
+		]]>    
+    </select>
+    
+    <select id="selectWindLidarPerMon" parameterType="hashmap" resultType="hashmap">
+    
+
+
+SELECT DEF.S_CODE, DEF.S_NAME, DEF.A, IFNULL(SEA.RATE, 0) RATE
+  FROM (
+ SELECT S_CODE, S_NAME, M.A
+   FROM T_ST_CODE, 
+ (
+          SELECT '01' a union all SELECT '02' a union all SELECT '03' a union all SELECT '04' a union all SELECT '05' a union all
+          SELECT '06' a union all SELECT '07' a union all SELECT '08' a union all SELECT '09' a union all SELECT '10' a union all
+          SELECT '11' a union all SELECT '12' a  
+ ) M 
+ 	  <if test="s_code != null">
+	           WHERE  S_CODE = #{s_code}
+	  </if>
+) DEF LEFT JOIN (
+
+SELECT
+       S_CODE, 
+		 CASE WHEN S_CODE = '13211' THEN '일산(13211)' 
+		      WHEN S_CODE = '13210' THEN '송도(13210)'
+				WHEN S_CODE = '13206' THEN '구로(13206)'
+		 END S_NAME, SUBSTR(ST_DAY, 1, 7) AS YM, SUBSTR(ST_DAY, 1, 4) YY, SUBSTR(ST_DAY, 6, 2) MM, ROUND(SUM(RATE)/31, 2) AS RATE
+  FROM
+ (
+       SELECT
+		        S_CODE, ST_DAY, SUM(RATE)/24 AS RATE
+         FROM
+			(
+              SELECT
+                     S_CODE, ST_DAY,  H_TIME, 
+                     ROUND(
+		                       (
+								        IFNULL(ROUND(r1/s1 * 100, 2), 0) + IFNULL(ROUND(r2/s2 * 100, 2), 0) + IFNULL(ROUND(r3/s3 * 100, 2), 0) + 
+		                          IFNULL(ROUND(r4/s4 * 100, 2), 0) + IFNULL(ROUND(r5/s5 * 100, 2), 0) + IFNULL(ROUND(r6/s6 * 100, 2), 0)
+									  )/6, 2
+				         ) AS RATE
+               FROM 
+					(
+                    SELECT 
+                           S_CODE,
+                           DATE_FORMAT(st_time, '%Y-%m-%d') AS ST_DAY, 
+		                     DATE_FORMAT(st_time, '%H') h_time, 
+	 	                     DATE_FORMAT(st_time, '%Y-%m-%d %H') AS ST_TIME,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '00' AND '09'), (real_file_cnt), 0)) r1,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '10' AND '19'), (real_file_cnt), 0)) r2,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '20' AND '29'), (real_file_cnt), 0)) r3,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (real_file_cnt), 0)) r4,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (real_file_cnt), 0)) r5,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (real_file_cnt), 0)) r6,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '00' AND '09'), (srv_file_cnt), 0)) s1,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '10' AND '19'), (srv_file_cnt), 0)) s2,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '20' AND '29'), (srv_file_cnt), 0)) s3,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (srv_file_cnt), 0)) s4,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
+                           SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
+                     FROM T_RCV_STS
+                    WHERE DATE_FORMAT(st_time, '%Y') = #{s_date} 
+	  <if test="s_code != null">
+	           AND  S_CODE = #{s_code}
+	  </if>
+                    GROUP BY S_CODE, DATE_FORMAT(st_time, '%Y-%m-%d %H')
+               ) TMP1
+               ORDER BY ST_DAY, H_TIME
+         ) TMP2
+         GROUP BY S_CODE, ST_DAY
+ ) TMP3 
+ GROUP BY S_CODE, SUBSTR(ST_DAY, 1, 7)
+ 
+ ) SEA ON DEF.S_CODE = SEA.S_CODE AND DEF.A = SEA.MM
+ ORDER BY S_CODE, A
+ 
+    
     </select>
     
 	<select id="selectLidarList" parameterType="hashmap" resultType="hashmap">

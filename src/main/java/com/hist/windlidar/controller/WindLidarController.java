@@ -88,6 +88,64 @@ public class WindLidarController {
 		return mv;
 	}
 	
+	/**
+	 * 일변 관측자료 수신 통계 데이터 조회
+	 * 검색조건 : 관측소별, 일자별(년-월)
+	 * @param commandMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/windLidarDList.do")
+	public ModelAndView windLidarListPerDay(CommandMap commandMap) throws Exception
+	{
+		ModelAndView mv = new ModelAndView("/data/dataDayList");
+		
+		if (commandMap.get("s_code") == null)
+		{
+			commandMap.put("s_code", 13211);
+		}
+		if (commandMap.get("s_date") == null)
+		{
+			commandMap.put("s_date", CommonUtil.getInstance().getCurrentMonth());  // 금일 년월(2017-03)
+		}
+		log.info("s_code : " + commandMap.get("s_code"));
+		log.info("s_date : " + commandMap.get("s_date"));
+		List<Map<String, Object>> list = windLidarService.windLidarListPerDaySearch(commandMap.getMap());
+		
+		// 결과를 클라이언트에 전달
+		mv.addObject("list", list);
+		mv.addObject("commandMap", commandMap.getMap()); 
+		
+		
+		return mv;
+	}
+	
+	/**
+	 * 월별 관측자료 수신 통계 데이터 조회
+	 * 검색 조건 : 관측소별(옵션), 일자별(년)
+	 * @param commandMap
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/windLidarMList.do")
+	public ModelAndView windLidarListPerMon(CommandMap commandMap) throws Exception
+	{
+		ModelAndView mv = new ModelAndView("/data/dataMonList");
+		
+		if (commandMap.get("s_date") == null)
+		{
+			commandMap.put("s_date", CommonUtil.getInstance().getCurrentFormat("yyyy"));
+		}
+		log.info("s_code : " + commandMap.get("s_code"));
+		log.info("s_date : " + commandMap.get("s_date"));
+		List<Map<String, Object>> list = windLidarService.windLidarListPerMonSearch(commandMap.getMap());
+		
+		// 결과를 클라이언트에 전달
+		mv.addObject("list", list);
+		mv.addObject("commandMap", commandMap.getMap()); 
+		
+		return mv;
+	}
 	
 	@RequestMapping(value="/index.do") 
 	public ModelAndView index(CommandMap commandMap) throws Exception
