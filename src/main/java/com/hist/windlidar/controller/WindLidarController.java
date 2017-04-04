@@ -99,15 +99,26 @@ public class WindLidarController {
 	public ModelAndView windLidarListPerDay(CommandMap commandMap) throws Exception
 	{
 		ModelAndView mv = new ModelAndView("/data/dataDayList");
+		String s_date = null;
 		
 		if (commandMap.get("s_code") == null)
 		{
 			commandMap.put("s_code", 13211);
 		}
-		if (commandMap.get("s_date") == null)
+		if (commandMap.get("s_year") == null)
 		{
-			commandMap.put("s_date", CommonUtil.getInstance().getCurrentMonth());  // 금일 년월(2017-03)
+			s_date = CommonUtil.getInstance().getCurrentFormat("yyyy");
+		}else {
+			s_date = commandMap.get("s_year").toString();
 		}
+		if (commandMap.get("s_mon") == null)
+		{
+			s_date += "-"+CommonUtil.getInstance().getCurrentFormat("mm");
+		}
+		else {
+			s_date += "-"+commandMap.get("s_mon").toString();
+		}
+		commandMap.put("s_date", s_date);
 		log.info("s_code : " + commandMap.get("s_code"));
 		log.info("s_date : " + commandMap.get("s_date"));
 		List<Map<String, Object>> list = windLidarService.windLidarListPerDaySearch(commandMap.getMap());

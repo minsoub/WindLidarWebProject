@@ -4,6 +4,7 @@ public class SessionClass {
 	private String id;
 	private String name;
 	private int auth;
+	private String loginDt;
 	
 	public SessionClass()
 	{
@@ -34,6 +35,16 @@ public class SessionClass {
 	public void setAuth(int _auth)
 	{
 		auth = _auth;
+	}
+	
+	public void setLoginDt(String _dt)
+	{
+		loginDt = _dt;
+	}
+	
+	public String getLoginDt()
+	{
+		return loginDt;
 	}
 	
 }

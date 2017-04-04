@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ page import="com.hist.windlidar.common.CommonUtil" %>
 <%@ include file="/WEB-INF/include/header.jsp" %>
 
 	<table class="headList">
@@ -21,7 +21,17 @@
      </th>
      <th width="80">날자</th>
      <th>
-       <input type="text" id="s_date"  readonly value="${commandMap.s_date}">
+       <select id="s_year" name="s_year">
+<% int year = Integer.parseInt(CommonUtil.getInstance().getCurrentFormat("yyyy")); %>       
+       <c:forEach var="year" begin="<%=year-2%>" end="<%=year%>">
+          <option value="<c:out value="${year}"/>" <c:if test="${commandMap.s_year == year}">selected</c:if>><c:out value="${year}"/></option>
+       </c:forEach>         
+       </select>년&nbsp;
+       <select id="s_mon" name="s_mon">
+       <c:forEach var="mon" begin="1" end="12">
+            <option value="<c:if test="${mon < 10}">0<c:out value="${mon}"/></c:if><c:if test="${mon >10}"><c:out value="${mon}"/></c:if>" <c:if test="${commandMap.s_mon == mon}">selected</c:if>><c:if test="${mon < 10}">0<c:out value="${mon}"/></c:if><c:if test="${mon >10}"><c:out value="${mon}"/></c:if></option>
+       </c:forEach>
+       </select>월
      </th>
      <th>
      <a href="#this" class="btn" id="search">검색</a>
@@ -139,54 +149,23 @@
 	
 	<script type="text/javascript">
 
-	    $(function() {
-	       $( "#s_date" ).datepicker({
-	          dateFormat: 'yy-mm-dd'
-	       });
-	    });
-
 		$(document).ready(function(){
-			$("#list").on("click", function(e){ //글쓰기 버튼
-				e.preventDefault();
-				fn_list();
-			});	
-			
 			$("#search").on("click", function(e){ //글쓰기 버튼
 				e.preventDefault();
 				fn_search();
 			});	
 		});
 	
-		function ScanList(page){
-			var comSubmit = new ComSubmit("frm");
-			comSubmit.setUrl("<c:url value='/windLidarHList.do' />"); 
-			comSubmit.addParam("s_code", $("#s_code").val());
-			
-			if ($("#s_date").val() != "")
-			{
-				comSubmit.addParam("s_date", $("#s_date").val());
-				comSubmit.addParam("s_mode", "search");
-			}
-			comSubmit.submit();
-		}
-		
-		function fn_list()
-		{
-			var comSubmit = new ComSubmit("frm");
-			comSubmit.setUrl("<c:url value='/scanList.do' />"); 
-			comSubmit.addParam("s_code", $("#s_code").val());
-			comSubmit.submit();
-		}
-		
 		function fn_search()
 		{
 			var comSubmit = new ComSubmit("frm");
-			comSubmit.setUrl("<c:url value='/windLidarHList.do' />"); 
+			comSubmit.setUrl("<c:url value='/windLidarDList.do' />"); 
 			if ($("#s_code").val() != "")
 			{
 				comSubmit.addParam("s_code", $("#s_code").val());
 			}
-			comSubmit.addParam("s_date", $("#s_date").val());
+			comSubmit.addParam("s_year", $("#s_year").val());
+			comSubmit.addParam("s_mon", $("#s_mon").val());
 			comSubmit.addParam("s_mode", "search");
 			comSubmit.submit();
 		}

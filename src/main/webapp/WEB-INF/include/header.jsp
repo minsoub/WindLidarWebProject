@@ -42,7 +42,7 @@
   }else {
 %>
   <tr>
-	<th scope="col">Wind Lidar 관측자료 수신현황</th>
+	<th scope="col"><a href="<c:url value='/login.do' />">Wind Lidar 관측자료 수신현황</a></th>
 	<th scope="col"><a href="<c:url value='/scanList.do' />">Scanning Parameter</a></th>
 	<th scope="col"><a href="<c:url value='/windLidarHList.do'/>">시간대별 통계</a></th>
 	<th scope="col"><a href="<c:url value='/windLidarDList.do'/>">일별통계</a></th>

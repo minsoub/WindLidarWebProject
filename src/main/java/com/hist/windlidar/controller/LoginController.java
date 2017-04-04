@@ -48,6 +48,7 @@ public class LoginController {
 			SessionClass cls = new SessionClass();
 			cls.setId(loginInfo.get("ID").toString());
 			cls.setName(loginInfo.get("NAME").toString());
+			cls.setLoginDt(loginInfo.get("LAST_DT").toString());
 			int auth_chk = Integer.parseInt(loginInfo.get("AUTH_CHK").toString());
 			cls.setAuth(auth_chk);
 			session.setAttribute("user", cls);
@@ -92,7 +93,7 @@ public class LoginController {
 		if (session.getAttribute("user") == null) 
 		{
 			log.info("User login fail");
-			mv = new ModelAndView("/home");
+			mv = new ModelAndView("/loginForm");
 			if (commandMap.get("msg") != null)
 			{
 				mv.addObject("commandMap", commandMap.getMap());
@@ -103,7 +104,7 @@ public class LoginController {
 			log.info("msg : " + commandMap.get("msg"));
 			
 			commandMap.put("msg", commandMap.get("msg"));
-			mv = new ModelAndView("/main");
+			mv = new ModelAndView("redirect:/main.do");
 			
 			if (commandMap.get("msg") != null)
 			{
@@ -127,7 +128,7 @@ public class LoginController {
 	public ModelAndView logout() throws Exception
 	{
 		// session invalidate
-		ModelAndView mv = new ModelAndView("/home");
+		ModelAndView mv = new ModelAndView("/loginForm");
 		session.setAttribute("user", null);
 		session.invalidate();
 		

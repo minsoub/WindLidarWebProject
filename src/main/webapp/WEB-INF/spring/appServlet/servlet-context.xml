@@ -18,6 +18,13 @@
 			<bean class="com.hist.windlidar.resolver.CustomMapArgumentResolver"></bean>		
 		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
+	
+	<mvc:interceptors>
+	   <mvc:interceptor>
+		  <mvc:mapping path="/**/*.do"/>
+		  <bean class="com.hist.windlidar.common.LoginInterceptor"></bean>
+	   </mvc:interceptor>
+    </mvc:interceptors>
 
     <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />

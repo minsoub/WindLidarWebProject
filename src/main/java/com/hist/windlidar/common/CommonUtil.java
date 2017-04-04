@@ -1,9 +1,26 @@
 package com.hist.windlidar.common;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public class CommonUtil {
 	
@@ -62,6 +79,20 @@ public class CommonUtil {
 		
 		return dt;
 	}
+	/**
+	 * 금일보다 하루전의 날짜를 리턴한다.
+	 * 
+	 * @return
+	 */
+	public String getYesaterDay()
+	{
+		Date dt = new Date();
+		Calendar c = Calendar.getInstance(); 
+		c.setTime(dt); 
+		c.add(Calendar.DATE, -1);
+		
+		return new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+	}
 	
 	/**
 	 * 주어진 년-월의 미자막 일자를 구해서 리턴한다.
@@ -100,5 +131,76 @@ public class CommonUtil {
 		else {
 			return String.valueOf(idx);
 		}
+	}
+	
+	/**
+	 * XML 데이터를 읽어서 파시항해서 Map으로 리턴한다.
+	 * 
+	 * @param xmlData
+	 * @return
+	 */
+	public Map<String, Object> parseXML(String xmlData)
+	{
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder documentBuilder;
+	    Map<String, Object> info = new HashMap<String, Object>();
+	    
+	    
+		try {
+			documentBuilder = factory.newDocumentBuilder();
+
+	 
+			// xml 문자열은 InputStream으로 변환
+			InputStream is = new ByteArrayInputStream(xmlData.getBytes());
+			// 파싱 시작
+			Document doc = documentBuilder.parse(is);
+			// 최상위 노드 찾기
+			Element element = doc.getDocumentElement();
+
+			NodeList items = element.getElementsByTagName("RemoteConnect");
+			NodeList items1 = element.getElementsByTagName("LidarState");
+			NodeList items2 = element.getElementsByTagName("State");
+			NodeList items3 = element.getElementsByTagName("Error");
+
+			//getAttributes().getNamedItem("data").getNodeValue()
+			
+			
+			Node item = items.item(0);
+			if (item != null)
+			{
+				info.put(item.getNodeName(), item.getAttributes().getNamedItem("Value").getNodeValue());
+			}
+			Node item2 = items1.item(0);
+			if (item2 != null)
+			{
+				info.put(item2.getNodeName(), item2.getAttributes().getNamedItem("Value").getNodeValue());
+			}
+			
+			int count = items2.getLength();
+			for (int i=0; i<count; i++)
+			{
+				Node tm = items2.item(i);
+				if (tm != null)
+				{
+					info.put(tm.getAttributes().getNamedItem("Name").getNodeValue(),  tm.getAttributes().getNamedItem("Value").getNodeValue());
+				}
+			}
+			Node item4 = items3.item(0);
+			if (item4 != null)
+			{
+				info.put(item4.getAttributes().getNamedItem("Source").getNodeValue(), item4.getAttributes().getNamedItem("Message").getNodeValue());
+			}
+
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    return info;
 	}
 }
