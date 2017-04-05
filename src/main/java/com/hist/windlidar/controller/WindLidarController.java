@@ -32,7 +32,7 @@ public class WindLidarController {
 		List<Map<String, Object>> list = windLidarService.selectWindLidarList(commandMap);
 		
 		// 결과를 클라이언트에 전달
-		mv.addObject("list", list);
+		mv.addObject("list", list); 
 		return mv;
 	}
 	
@@ -108,15 +108,17 @@ public class WindLidarController {
 		if (commandMap.get("s_year") == null)
 		{
 			s_date = CommonUtil.getInstance().getCurrentFormat("yyyy");
+			commandMap.put("s_year", CommonUtil.getInstance().getCurrentFormat("yyyy"));
 		}else {
 			s_date = commandMap.get("s_year").toString();
 		}
 		if (commandMap.get("s_mon") == null)
 		{
-			s_date += "-"+CommonUtil.getInstance().getCurrentFormat("mm");
+			s_date += "-"+CommonUtil.getInstance().getCurrentFormat("MM");
+			commandMap.put("s_mon", CommonUtil.getInstance().getCurrentFormat("MM"));
 		}
 		else {
-			s_date += "-"+commandMap.get("s_mon").toString();
+			s_date += "-"+commandMap.get("s_mon").toString(); 
 		}
 		commandMap.put("s_date", s_date);
 		log.info("s_code : " + commandMap.get("s_code"));

@@ -33,7 +33,8 @@
        </select>년&nbsp;
        <select id="s_mon" name="s_mon">
        <c:forEach var="mon" begin="1" end="12">
-            <option value="<c:if test="${mon < 10}">0<c:out value="${mon}"/></c:if><c:if test="${mon >10}"><c:out value="${mon}"/></c:if>" <c:if test="${commandMap.s_mon == mon}">selected</c:if>><c:if test="${mon < 10}">0<c:out value="${mon}"/></c:if><c:if test="${mon >10}"><c:out value="${mon}"/></c:if></option>
+            <c:if test="${mon < 10}"><c:set var="mm" value="0${mon}"/></c:if><c:if test="${mon >= 10}"><c:set var="mm" value="${mon}"/></c:if>
+            <option value="<c:out value="${mm}"/>" <c:if test="${commandMap.s_mon == mm}">selected</c:if>><c:out value="${mm}"/></option>
        </c:forEach>
        </select>월
      </th>
