@@ -38,17 +38,17 @@
 		  <tr>
 		     <td>${PAM1.S_NAME} ( ${PAM1.S_CODE} )</td>
 		     <td>&nbsp;</td>
-		     <td>more</td>
+             <td><a href="#" id="pam01">more</a></td>
 		  </tr>
 		  <tr>
 		     <td>Lidar Connection STS</td>
 		     <td>&nbsp;</td>
-		     <td>connected</td>
+		     <td><c:if test="${not empty ALM01.RemoteConnect}"><c:out value="${ALM01.RemoteConnect}"/></c:if></td>
 		  </tr>
 		  <tr>
 		     <td>Lidar status</td>
 		     <td>&nbsp;</td>
-		     <td>scanning</td>
+		     <td><c:if test="${not empty ALM01.LidarState}"><c:out value="${ALM01.LidarState}"/></c:if></td>
 		  </tr>
 		  <tr>
 		     <td>관측 데이터 수신</td>
@@ -84,7 +84,7 @@
 		  <tr>
 		     <td>Scanning Parameters</td>
 		     <td>&nbsp;</td>
-		     <td>more</td>
+		     <td><a href="#" id="scan01">more</a></td>
 		  </tr>
 		  <tr>
 		     <td>최종수신시각(UTC)</td>
@@ -131,7 +131,13 @@
 		     <td>&nbsp;</td>
 		     <td>&nbsp;</td>
 		  </tr>
-		  
+        <c:forEach var="entry" items="${ALM01}" varStatus="status">
+          <tr> 
+             <td>${entry.key}</td> 
+             <td>${entry.value}</td>
+             <td>&nbsp;</td>
+          </tr>
+        </c:forEach>
 		</tbody>
 	</table>
 	
@@ -142,17 +148,17 @@
 		  <tr>
 		     <td>${PAM2.S_NAME} ( ${PAM2.S_CODE} )</td>
 		     <td>&nbsp;</td>
-		     <td>more</td>
+             <td><a href="#" id="pam02">more</a></td>
 		  </tr>
 		  <tr>
 		     <td>Lidar Connection STS</td>
 		     <td>&nbsp;</td>
-		     <td>connected</td>
+		     <td><c:if test="${not empty ALM02.RemoteConnect}"><c:out value="${ALM02.RemoteConnect}"/></c:if></td>
 		  </tr>
 		  <tr>
 		     <td>Lidar status</td>
 		     <td>&nbsp;</td>
-		     <td>scanning</td>
+		     <td><c:if test="${not empty ALM02.LidarState}"><c:out value="${ALM02.LidarState}"/></c:if></td>
 		  </tr>
 		  <tr>
 		     <td>관측 데이터 수신</td>
@@ -188,7 +194,7 @@
 		  <tr>
 		     <td>Scanning Parameters</td>
 		     <td>&nbsp;</td>
-		     <td>more</td>
+		     <td><a href="#" id="scan02">more</a></td>
 		  </tr>
 		  <tr>
 		     <td>최종수신시각(UTC)</td>
@@ -235,7 +241,13 @@
 		     <td>&nbsp;</td>
 		     <td>&nbsp;</td>
 		  </tr>
-		  
+        <c:forEach var="entry" items="${ALM02}" varStatus="status">
+          <tr> 
+             <td>${entry.key}</td> 
+             <td>${entry.value}</td>
+             <td>&nbsp;</td>
+          </tr>
+        </c:forEach>		  
 		</tbody>
 	</table>
 </td>
@@ -245,17 +257,17 @@
 		  <tr>
 		     <td>${PAM3.S_NAME} ( ${PAM3.S_CODE} )</td>
 		     <td>&nbsp;</td>
-		     <td>more</td>
+             <td><a href="#" id="pam03">more</a></td>
 		  </tr>
 		  <tr>
 		     <td>Lidar Connection STS</td>
 		     <td>&nbsp;</td>
-		     <td>connected</td>
+		     <td><c:if test="${not empty ALM03.RemoteConnect}"><c:out value="${ALM03.RemoteConnect}"/></c:if></td>
 		  </tr>
 		  <tr>
 		     <td>Lidar status</td>
 		     <td>&nbsp;</td>
-		     <td>scanning</td>
+		     <td><c:if test="${not empty ALM03.LidarState}"><c:out value="${ALM03.LidarState}"/></c:if></td>
 		  </tr>
 		  <tr>
 		     <td>관측 데이터 수신</td>
@@ -291,7 +303,7 @@
 		  <tr>
 		     <td>Scanning Parameters</td>
 		     <td>&nbsp;</td>
-		     <td>more</td>
+		     <td><a href="#" id="scan03">more</a></td>
 		  </tr>
 		  <tr>
 		     <td>최종수신시각(UTC)</td>
@@ -338,7 +350,13 @@
 		     <td>&nbsp;</td>
 		     <td>&nbsp;</td>
 		  </tr>
-		  
+        <c:forEach var="entry" items="${ALM03}" varStatus="status">
+          <tr> 
+             <td>${entry.key}</td> 
+             <td>${entry.value}</td>
+             <td>&nbsp;</td>
+          </tr>
+        </c:forEach>		  
 		</tbody>
 	</table>
 </td>	
@@ -356,28 +374,55 @@
 				alert("${commandMap.msg}");
 			} 
 			
-			$("#login").on("click", function(e){ //로그인 하기  버튼
+			$("#scan01").on("click", function(e){ 
 				e.preventDefault();
-				fn_loginProcess();
+				fn_scanGoUrl("13211");
+			});	
+			$("#scan02").on("click", function(e){ 
+				e.preventDefault();
+				fn_scanGoUrl("13210");
+			});	
+			$("#scan03").on("click", function(e){ 
+				e.preventDefault();
+				fn_scanGoUrl("13206");
+			});	
+			$("#pam01").on("click", function(e){ 
+				e.preventDefault();
+				fn_pamGoUrl("13211");
+			});	
+			$("#pam02").on("click", function(e){ 
+				e.preventDefault();
+				fn_pamGoUrl("13210");
+			});	
+			$("#pam03").on("click", function(e){ 
+				e.preventDefault();
+				fn_pamGoUrl("13206");
 			});	
 		});
+
+		Date.prototype.yyyymmdd = function() {
+			  var yyyy = this.getFullYear().toString();
+			  var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+			  var dd  = this.getDate().toString();
+			  return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]); // padding
+			};
+			
 		
-		
-		function fn_loginProcess(){
-			if (frm.id.value == "")
-			{
-			   alert("아이디를 입력하세요!!!");
-			   frm.id.focus();
-			   return;
-			}
-			if (frm.pass.value == "")
-			{
-			   alert("패스워드를 입력하세요!!!");
-			   frm.pass.focus();
-			   return;
-			}
+		function fn_scanGoUrl(s_code)
+		{
 			var comSubmit = new ComSubmit("frm");
-			comSubmit.setUrl("<c:url value='/userLogin.do' />");
+			comSubmit.addParam("s_code", s_code);
+			comSubmit.setUrl("<c:url value='/scanList.do'/>");
+			comSubmit.submit();
+		}
+		
+		function fn_pamGoUrl(s_code)
+		{
+			var comSubmit = new ComSubmit("frm");
+			var date = new Date();
+			comSubmit.addParam("s_code", s_code);
+			comSubmit.addParam("s_date", date.yyyymmdd());
+			comSubmit.setUrl("<c:url value='/windLidarHList.do'/>");
 			comSubmit.submit();
 		}
 	</script>	

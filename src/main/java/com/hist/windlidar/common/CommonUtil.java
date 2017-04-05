@@ -168,12 +168,22 @@ public class CommonUtil {
 			Node item = items.item(0);
 			if (item != null)
 			{
-				info.put(item.getNodeName(), item.getAttributes().getNamedItem("Value").getNodeValue());
+				String msg = "";
+				if (item.getAttributes().getNamedItem("Value").getNodeValue().equals("0"))
+				{
+					msg = "no connection";
+				}
+				else
+				{
+					msg = "connected";
+				}
+				info.put(item.getNodeName(), msg);   // item.getAttributes().getNamedItem("Value").getNodeValue());
 			}
 			Node item2 = items1.item(0);
 			if (item2 != null)
 			{
-				info.put(item2.getNodeName(), item2.getAttributes().getNamedItem("Value").getNodeValue());
+				String msg = getLidarStatus(item2.getAttributes().getNamedItem("Value").getNodeValue());
+				info.put(item2.getNodeName(), msg);  //  item2.getAttributes().getNamedItem("Value").getNodeValue());
 			}
 			
 			int count = items2.getLength();
@@ -182,7 +192,16 @@ public class CommonUtil {
 				Node tm = items2.item(i);
 				if (tm != null)
 				{
-					info.put(tm.getAttributes().getNamedItem("Name").getNodeValue(),  tm.getAttributes().getNamedItem("Value").getNodeValue());
+					String msg = "";
+					if (tm.getAttributes().getNamedItem("Value").getNodeValue().equals("0"))
+					{
+						msg = "no";
+					}
+					else 
+					{
+						msg = "yes";
+					}
+					info.put(tm.getAttributes().getNamedItem("Name").getNodeValue(),  msg);  // tm.getAttributes().getNamedItem("Value").getNodeValue());
 				}
 			}
 			Node item4 = items3.item(0);
@@ -202,5 +221,41 @@ public class CommonUtil {
 			e.printStackTrace();
 		}
 	    return info;
+	}
+	
+	
+	private String getLidarStatus(String data)
+	{
+		String msg = "";
+		int type = Integer.parseInt(data);
+		
+		switch(type)
+		{
+		case 0:
+			msg = "state is unknown";
+			break;
+		case 1:
+			msg = "ready for operation";
+			break;
+		case 2:
+			msg = "peparation for scanning";
+			break;
+		case 3:
+			msg = "scanning";
+			break;
+		case 4:
+			msg = "scanning is stopping";
+			break;
+		case 5:
+			msg = "scanning is stopped";
+			break;
+		case 6:
+			msg = "scanning is completed";
+			break;
+		case 7:
+			msg = "an error occurred during scanning";
+			break;
+		}
+		return msg;
 	}
 }

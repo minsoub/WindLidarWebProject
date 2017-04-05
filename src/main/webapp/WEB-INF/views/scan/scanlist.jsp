@@ -5,7 +5,11 @@
 	<table class="headList">
 	<thead>
 	<th>
-	<h2>Scanning Parameter - 일산(13211)</h2>
+	<h2>Scanning Parameter - 
+	<c:if test="${commandMap.s_code == 13211}">일산(13211)</c:if>
+	<c:if test="${commandMap.s_code == 13210}">송도(13210)</c:if>
+	<c:if test="${commandMap.s_code == 13206}">구로(13206)</c:if>
+	</h2>
    </th>
    </thead>
    </table>
@@ -14,9 +18,9 @@
    <thead>
      <th width="100">관측소별</th>
      <th><select id="s_code">
-         <option value="13211">일산(13211)</option>
-         <option value="13210">송도(13210)</option>
-         <option value="13206">구로(13206)</option>
+         <option value="13211" <c:if test="${commandMap.s_code == 13211}">selected</c:if>>일산(13211)</option>
+         <option value="13210" <c:if test="${commandMap.s_code == 13210}">selected</c:if>>송도(13210)</option>
+         <option value="13206" <c:if test="${commandMap.s_code == 13206}">selected</c:if>>구로(13206)</option>
      </select>
      </th>
      <th width="80">날자</th>
@@ -161,7 +165,10 @@
 			comSubmit.setUrl("<c:url value='/scanList.do' />"); 
 			//comSubmit.addParam("page", page);
 			comSubmit.addParam("s_code", $("#s_code").val());
-			comSubmit.addParam("s_date", $("#s_date").val());
+			if ($("#s_date").val() != "")
+			{
+				comSubmit.addParam("s_date", $("#s_date").val());
+			}
 			comSubmit.addParam("s_mode", "search");
 			comSubmit.submit();
 		}

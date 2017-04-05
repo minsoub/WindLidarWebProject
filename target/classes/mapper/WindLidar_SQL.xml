@@ -328,12 +328,16 @@ SELECT
 			 LIMIT ${listNum}, 10
 	</select>
 	<select id="selectScanCount" parameterType="hashmap" resultType="hashmap">
-		<![CDATA[
 			SELECT
 					COUNT(NO) AS CNT
 			  FROM  T_RCV_PARAM_INFO
-			 WHERE  S_CODE = #{s_code}
-		]]>	
+			 WHERE  1 = 1
+	  <if test="s_code != null">
+	           AND  S_CODE = #{s_code}
+	  </if>
+      <if test="s_date != null">
+              AND DATE_FORMAT(st_time, '%Y-%m-%d') = #{s_date}
+      </if>
 	</select>
 	
 	<select id="selectParamInfo" parameterType="hashmap" resultType="hashmap">
