@@ -9,6 +9,7 @@
 SELECT A AS ST_TIME, IFNULL(B.R, 0) RATE,  IFNULL(B.r_display1, 0) DIS1, IFNULL(B.r_display2, 0) DIS2, 
        IFNULL(B.r_display3, 0) DIS3, IFNULL(B.r_display4, 0) DIS4, IFNULL(B.r_display5, 0) DIS5, IFNULL(B.r_display6, 0) DIS6
   FROM (
+          SELECT '00' a union all
           SELECT '01' a union all SELECT '02' a union all SELECT '03' a union all SELECT '04' a union all SELECT '05' a union all
           SELECT '06' a union all SELECT '07' a union all SELECT '08' a union all SELECT '09' a union all SELECT '10' a union all
           SELECT '11' a union all SELECT '12' a union all SELECT '13' a union all SELECT '14' a union all SELECT '15' a union all
@@ -286,7 +287,7 @@ SELECT
 					PASS,
 					EMAIL,
 					AUTH_CHK,
-					IFNULL(LAST_DT, CURRENT_TIMESTAMP) LAST_DT,
+					DATE_FORMAT(IFNULL(LAST_DT, CURRENT_TIMESTAMP), '%Y-%m-%d %H:%i:%s') LAST_DT,
 					REG_DT
 			FROM
 			   T_USR_INFO

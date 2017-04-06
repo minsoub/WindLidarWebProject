@@ -37,7 +37,7 @@
             <option value="<c:out value="${mm}"/>" <c:if test="${commandMap.s_mon == mm}">selected</c:if>><c:out value="${mm}"/></option>
        </c:forEach>
        </select>월
-     </th>
+     </th> 
      <th>
      <a href="#this" class="btn" id="search">검색</a>
      </th>
