@@ -1,77 +1,70 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
 <%@ include file="/WEB-INF/include/header.jsp" %>
 
-	<table class="headList">
-	<thead>
-	<th>
-	<h2>시간대별 관측자료 수신 통계 - 
-	<c:if test="${commandMap.s_code == 13211}">일산(13211)</c:if>
-	<c:if test="${commandMap.s_code == 13210}">송도(13210)</c:if>
-	<c:if test="${commandMap.s_code == 13206}">구로(13206)</c:if>	
-	</h2>
-   </th>
-   </thead>
-   </table>
-   
-   <table class="searchList">
-   <thead>
-     <th width="100">관측소별</th>
-     <th><select id="s_code">
-         <option value="13211" <c:if test="${commandMap.s_code == 13211}">selected</c:if>>일산(13211)</option>
-         <option value="13210" <c:if test="${commandMap.s_code == 13210}">selected</c:if>>송도(13210)</option>
-         <option value="13206" <c:if test="${commandMap.s_code == 13206}">selected</c:if>>구로(13206)</option>
-     </select>
-     </th>
-     <th width="80">날자</th>
-     <th>
-       <input type="text" id="s_date"  readonly value="${commandMap.s_date}">
-     </th>
-     <th>
-     <a href="#this" class="btn" id="search">검색</a>
-     </th>
-     <th></th><th width="30%"></th>
-   </thead>
-   </table>
-   	
-	<table class="scan_list">
-		<colgroup>
-			<col width="20%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="10%"/>
-			<col width="20%"/>
-		</colgroup>
-		<thead>
-			<tr>
-				<th scope="col">시간대별</th>
-				<th scope="col">0 ~ 10분</th>
-				<th scope="col">10 ~ 20분</th>
-				<th scope="col">20 ~ 30분</th>
-				<th scope="col">30 ~ 40분</th>
-				<th scope="col">40 ~ 50분</th>
-				<th scope="col">50 ~ 60분</th>
-				<th scope="col">수신율</th>
-			</tr>
-		</thead>
-		<tbody>
+
+            <div id="section"> 
+                <div class="container">
+                    <h3><img src="image/icon_wind.png" style="margin-bottom:6px">시간대별 관측자료 수신 통계 - 
+                    	<c:if test="${commandMap.s_code == 13211}">일산(13211)</c:if>
+	                    <c:if test="${commandMap.s_code == 13210}">송도(13210)</c:if>
+	                    <c:if test="${commandMap.s_code == 13206}">구로(13206)</c:if>     
+                    </h3>
+                    <div class="search_box">
+                        <form action="" method="" name="search">
+                            <fieldset>
+                                <legend>검색</legend>
+                                                                관측소별
+                                <select id="s_code" name="select_location" class="sel" style="margin-right:25px;margin-left:10px">
+                                  <option value="13211" <c:if test="${commandMap.s_code == 13211}">selected</c:if>>일산(13211)</option>
+                                  <option value="13210" <c:if test="${commandMap.s_code == 13210}">selected</c:if>>송도(13210)</option>
+                                  <option value="13206" <c:if test="${commandMap.s_code == 13206}">selected</c:if>>구로(13206)</option>
+                                </select>
+                                                                 날짜 <input type="text" id="s_date"  readonly value="${commandMap.s_date}" style="height:24px;">
+ 
+                                <button type="button" id="search" class="btn_search">검색</button>
+                            </fieldset>                             
+                        </form>
+                    </div>
+                    <div class="box1" style="margin:7px">
+                        <time pubdate><strong>${commandMap.s_date}</strong></time> 
+                    </div>
+                    <div class="box s_04_1"  style="margin:7px; padding-right:230px;">
+                        <progress id="t_grap"  min="0" max="100" value="90"></progress>
+                        <span class="red" id="t_rate" style="margin:150px; padding-right:0px;">90%</span> 
+                    </div>
+                   
+
+                    <table class="table_list" style="margin-top:15px">
+                        <thead>
+                            <tr>
+                                <th>시간대별</th>
+                                <th>0~10분</th>
+                                <th>10~20분</th>
+                                <th>20~30분</th>
+                                <th>30~40분</th>
+                                <th>40~50분</th>
+                                <th>50~60분</th>
+                                <th>수신율</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            <c:set var="t_data" value="0"/>	            
 			<c:choose>
 				<c:when test="${fn:length(list) > 0}">
 					<c:forEach items="${list}" var="row" varStatus="status">
 						<tr>
-							<td>${row.ST_TIME}시 ~ </td>						
-							<td><c:if test="${row.DIS1 == 1}">O</c:if><c:if test="${row.DIS1 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS2 == 1}">O</c:if><c:if test="${row.DIS2 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS3 == 1}">O</c:if><c:if test="${row.DIS3 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS4 == 1}">O</c:if><c:if test="${row.DIS4 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS5 == 1}">O</c:if><c:if test="${row.DIS5 == 0}">x</c:if></td>
-							<td><c:if test="${row.DIS6 == 1}">O</c:if><c:if test="${row.DIS6 == 0}">x</c:if></td>
+							<td class="bold">${row.ST_TIME}시 ~ </td>						
+							<td><img src="<c:if test="${row.DIS1 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS1 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
+							<td><img src="<c:if test="${row.DIS2 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS2 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
+							<td><img src="<c:if test="${row.DIS3 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS3 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
+							<td><img src="<c:if test="${row.DIS4 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS4 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
+							<td><img src="<c:if test="${row.DIS5 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS5 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
+							<td><img src="<c:if test="${row.DIS6 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS6 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
 							<td>${row.RATE}%</td>
 						</tr>
+						<c:set var="t_data" value="${t_data + row.RATE}"/>	
 					</c:forEach>
+					<c:set var="t_data" value="${t_data/24}"/>	
 				</c:when>
 				<c:otherwise>
 					<tr>
@@ -79,13 +72,16 @@
 					</tr>
 				</c:otherwise>
 			</c:choose>
-		</tbody>
-	</table>
-	
+
+                        </tbody>
+                    </table>               
+                </div>
+            </div>
+
 	<form id="frm"></form>
 	
 	<%@ include file="/WEB-INF/include/body.jsp" %>
-	
+<%@ include file="/WEB-INF/include/footer.jsp" %>
 	<script type="text/javascript">
 
 	    $(function() {
@@ -104,6 +100,13 @@
 				e.preventDefault();
 				fn_search();
 			});	
+			
+			
+			$("#t_rate").text("${t_data}%");
+			$("#t_grap").val("${t_data}");
+			
+			//alert("${t_data}");
+			
 		});
 	
 		function ScanList(page){
@@ -138,5 +141,3 @@
 		}
 		
 	</script>	
-</body>
-</html>

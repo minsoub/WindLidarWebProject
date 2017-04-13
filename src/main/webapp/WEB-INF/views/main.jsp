@@ -4,10 +4,7 @@
 <%
    SessionClass user = (SessionClass)session.getAttribute("user");
 %>
-<div class="centered-wrapper">
 <form id="frm">
-	<h2>접속시간 : <%=user.getLoginDt()%></h2>
-
 <c:forEach items="${toList}" var="row" varStatus="status">
   <c:if test="${row.S_CODE == '13211'}">
        <c:set var="rate01" value="${row.RCV_RATE}" />
@@ -29,343 +26,314 @@
   <c:if test="${row.S_CODE == '13206'}">
        <c:set var="yrate03" value="${row.RCV_RATE}" />
   </c:if>
-</c:forEach>	
-<table border=0 width="1200" align="center">
-<tr>
-  <td aligin="center" width="400">	
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>${PAM1.S_NAME} ( ${PAM1.S_CODE} )</td>
-		     <td>&nbsp;</td>
-             <td><a href="#" id="pam01">more</a></td>
-		  </tr>
-		  <tr>
-		     <td>Lidar Connection STS</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty ALM01.RemoteConnect}"><c:out value="${ALM01.RemoteConnect}"/></c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Lidar status</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty ALM01.LidarState}"><c:out value="${ALM01.LidarState}"/></c:if></td>
-		  </tr>
-		  <tr>
-		     <td>관측 데이터 수신</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${PAM1.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM1.FILE_RCV_STS == '1'}">OK</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>데이터 송신 프로세스</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${PAM1.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM1.PRO_STS == '1'}">OK</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>최종 수신 시각</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.FILE_RCV_DT}">${PAM1.FILE_RCV_DT}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Today 수신율</td>
-		     <td>&nbsp;</td>
-		     <td><c:out value="${rate01}"/>%</td>
-		  </tr>
-		  <tr>
-		     <td>Yesterday 수신율</td>
-		     <td>&nbsp;</td>
-		     <td><c:out value="${yrate01}"/>%</td>
-		  </tr>
-		</tbody>
-	</table>
-	<br/>
-	
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>Scanning Parameters</td>
-		     <td>&nbsp;</td>
-		     <td><a href="#" id="scan01">more</a></td>
-		  </tr>
-		  <tr>
-		     <td>최종수신시각(UTC)</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.ST_TIME}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Measurement Type</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.P_TYPE}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Azimuth angle</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM1}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Elevation angle</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM2}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Sector size</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM3}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Scanning speed</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM4}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Accumulation time</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM5}</c:if></td>
-		  </tr>
-		</tbody>
-	</table>
-	
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>Alaram Messages</td>
-		     <td>&nbsp;</td>
-		     <td>&nbsp;</td>
-		  </tr>
-        <c:forEach var="entry" items="${ALM01}" varStatus="status">
+</c:forEach>
+
+
+            <div id="section"> 
+                <div class="container">
+                    <div class="wind_box fl_left" style="margin-right:25px">
+                        <h1 class="fl_left"><img src="image/icon_wind.png" style="margin-bottom:6px">${PAM1.S_NAME} (${PAM1.S_CODE})</h1>
+                        <button type="button" id="pam01" class="btn_more fl_right">MORE</button>
+                        <div class="status fl_left">
+                            <div class="box2 s_01" style="margin-right:5px">
+                                <span class="white">Lidar Connections STS</span> <br/> 
+                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="blue"><c:if test="${not empty ALM01.RemoteConnect}"><c:out value="${ALM01.RemoteConnect}"/></c:if></span>
+                            </div>
+                            <div class="box2 s_01">
+                                <span class="white">Lidar Status</span> <br/> 
+                                <span class="gray"><c:if test="${not empty ALM01.LidarState}"><c:out value="${ALM01.LidarState}"/></c:if></span>
+                            </div>
+                            <div class="box2 s_01" style="margin-right:5px;margin-top:5px">
+                                <span class="white">관측데이터 수신</span> <br/> 
+                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="blue"><c:if test="${PAM1.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM1.FILE_RCV_STS == '1'}">OK</c:if></span>
+                            </div>
+                            <div class="box2 s_01"  style="margin-top:5px">
+                                <span class="white">데이터 송신 프로세스</span> <br/> 
+                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="blue"><c:if test="${PAM1.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM1.PRO_STS == '1'}">OK</c:if></span>
+                            </div>
+                            <div class="box2 s_02" style="margin-right:5px;margin-top:5px">
+                                <span class="white">최종수신시각(UTC)</span>
+                            </div>
+                            <div class="box2 s_02_1"  style="margin-top:5px">
+                                <span class="gray"><c:if test="${not empty PAM1.FILE_RCV_DT}">${PAM1.FILE_RCV_DT}</c:if></span>
+                            </div>
+                            <div class="box2 s_03" style="margin-right:5px;margin-top:5px">
+                                <span class="white">Today 수신율</span>
+                            </div>
+                            <div class="box2 s_03_1"  style="margin-top:5px; padding-right:185px;">
+                                <progress min="0" max="100" value="<c:out value="${rate01}"/>"></progress>
+                                <span class="gray" style="padding-left:142px;"><c:out value="${rate01}"/>%</span>
+                            </div>
+                            <div class="box2 s_03" style="margin-right:5px;margin-top:5px">
+                                <span class="white">Yesterday 수신율</span>
+                            </div>
+                            <div class="box2 s_03_1"  style="margin-top:5px; padding-right:185px;">
+                                <progress min="0" max="100" value="${yrate01}"></progress>
+                                <span class="gray" style="padding-left:142px;">${yrate01}%</span>
+                            </div>
+                        </div>
+                        
+                        <h2 class="fl_left">Scanning Parameters</h2>
+                        <button type="button" class="btn_more fl_right" id="scan01">MORE</button>
+                        <table class="table_scan">
+                            <colgroup>
+                                <col width="45%">
+                                <col width="55%">
+                            </colgroup>
+                            <tr>
+                                <th>최종수신시간 (UTC)</th>
+                                <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.ST_TIME}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Measurement Type</th>
+                                <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.P_TYPE}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Azimuth Angle</th>
+                                <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM1}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Elevation Angle</th>
+                                <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM2}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Sector Size</th>
+                                <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM3}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Scanning Speed</th>
+                                <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM4}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Accumulation Time</th>
+                                <td><c:if test="${not empty PAM1.S_CODE}">${PAM1.PAM5}</c:if></td>
+                            </tr>
+                        </table>
+                        
+                        <h2 class="fl_left">Alaram Message</h2>
+                        <button type="button" class="btn_more fl_right" onclick="alarm()">MORE</button>
+                        <table class="table_alaram">
+                            <colgroup>
+                                <col width="45%">
+                                <col width="55%">
+                            </colgroup>
+         <c:forEach var="entry" items="${ALM01}" varStatus="status">
           <tr> 
-             <td>${entry.key}</td> 
+             <th>${entry.key}</th> 
              <td>${entry.value}</td>
-             <td>&nbsp;</td>
           </tr>
-        </c:forEach>
-		</tbody>
-	</table>
-	
-</td>
-<td align="center" width="400">
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>${PAM2.S_NAME} ( ${PAM2.S_CODE} )</td>
-		     <td>&nbsp;</td>
-             <td><a href="#" id="pam02">more</a></td>
-		  </tr>
-		  <tr>
-		     <td>Lidar Connection STS</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty ALM02.RemoteConnect}"><c:out value="${ALM02.RemoteConnect}"/></c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Lidar status</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty ALM02.LidarState}"><c:out value="${ALM02.LidarState}"/></c:if></td>
-		  </tr>
-		  <tr>
-		     <td>관측 데이터 수신</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${PAM2.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM2.FILE_RCV_STS == '1'}">OK</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>데이터 송신 프로세스</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${PAM2.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM2.PRO_STS == '1'}">OK</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>최종 수신 시각</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.FILE_RCV_DT}">${PAM2.FILE_RCV_DT}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Today 수신율</td>
-		     <td>&nbsp;</td>
-		     <td><c:out value="${rate02}"/>%</td>
-		  </tr>
-		  <tr>
-		     <td>Yesterday 수신율</td>
-		     <td>&nbsp;</td>
-		     <td><c:out value="${yrate02}"/>%</td>
-		  </tr>
-		</tbody>
-	</table>
-	<br/>
-	
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>Scanning Parameters</td>
-		     <td>&nbsp;</td>
-		     <td><a href="#" id="scan02">more</a></td>
-		  </tr>
-		  <tr>
-		     <td>최종수신시각(UTC)</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.ST_TIME}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Measurement Type</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.P_TYPE}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Azimuth angle</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM1}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Elevation angle</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM2}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Sector size</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM3}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Scanning speed</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM4}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Accumulation time</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM5}</c:if></td>
-		  </tr>
-		</tbody>
-	</table>
-	
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>Alaram Messages</td>
-		     <td>&nbsp;</td>
-		     <td>&nbsp;</td>
-		  </tr>
+        </c:forEach>                           
+
+                        </table>
+                    </div>
+                    
+                    <div class="wind_box fl_left" style="margin-right:25px">
+                        <h1 class="fl_left"><img src="image/icon_wind.png" style="margin-bottom:6px">${PAM2.S_NAME} ( ${PAM2.S_CODE} )</h1>
+                        <button type="button" id="pam02" class="btn_more fl_right">MORE</button>
+                        <div class="status fl_left">
+                            <div class="box2 s_01" style="margin-right:5px">
+                                <span class="white">Lidar Connections STS</span> <br/> 
+                                <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="red"><c:if test="${not empty ALM02.RemoteConnect}"><c:out value="${ALM02.RemoteConnect}"/></c:if></span>
+                            </div>
+                            <div class="box2 s_01">
+                                <span class="white">Lidar Status</span> <br/> 
+                                <span class="gray"><c:if test="${not empty ALM02.LidarState}"><c:out value="${ALM02.LidarState}"/></c:if></span>
+                            </div>
+                            <div class="box2 s_01" style="margin-right:5px;margin-top:5px">
+                                <span class="white">관측데이터 수신</span> <br/> 
+                                <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="red"><c:if test="${PAM2.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM2.FILE_RCV_STS == '1'}">OK</c:if></span>
+                            </div>
+                            <div class="box2 s_01"  style="margin-top:5px">
+                                <span class="white">데이터 송신 프로세스</span> <br/> 
+                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="blue"><c:if test="${PAM2.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM2.PRO_STS == '1'}">OK</c:if></span>
+                            </div>
+                            <div class="box2 s_02" style="margin-right:5px;margin-top:5px">
+                                <span class="white">최종수신시각(UTC)</span>
+                            </div>
+                            <div class="box2 s_02_1"  style="margin-top:5px">
+                                <span class="gray"><c:if test="${not empty PAM2.FILE_RCV_DT}">${PAM2.FILE_RCV_DT}</c:if></span>
+                            </div>
+                            <div class="box2 s_03" style="margin-right:5px;margin-top:5px">
+                                <span class="white">Today 수신율</span>
+                            </div>
+                            <div class="box2 s_03_1"  style="margin-top:5px; padding-right:185px;">
+                                <progress min="0" max="100" value="<c:out value="${rate02}"/>"></progress>
+                                <span class="gray" style="padding-left:142px;"><c:out value="${rate02}"/>%</span>
+                            </div>
+                            <div class="box2 s_03" style="margin-right:5px;margin-top:5px">
+                                <span class="white">Yesterday 수신율</span>
+                            </div>
+                            <div class="box2 s_03_1"  style="margin-top:5px; padding-right:185px;">
+                                <progress min="0" max="100" value="${yrate02}"></progress>
+                                <span class="gray" style="padding-left:142px;">${yrate02}%</span>
+                            </div>
+
+                        </div>
+                        
+                        <h2 class="fl_left">Scanning Parameters</h2>
+                        <button type="button" id="scan02" class="btn_more fl_right">MORE</button>
+                        <table class="table_scan">
+                            <colgroup>
+                                <col width="45%">
+                                <col width="55%">
+                            </colgroup>
+                            <tr>
+                                <th>최종수신시간 (UTC)</th>
+                                <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.ST_TIME}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Measurement Type</th>
+                                <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.P_TYPE}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Azimuth Angle</th>
+                                <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM1}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Elevation Angle</th>
+                                <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM2}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Sector Size</th>
+                                <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM3}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Scanning Speed</th>
+                                <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM4}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Accumulation Time</th>
+                                <td><c:if test="${not empty PAM2.S_CODE}">${PAM2.PAM5}</c:if></td>
+                            </tr>
+                        </table>
+                        
+                        <h2 class="fl_left">Alaram Message</h2>
+                        <button type="button" class="btn_more fl_right">MORE</button>
+                        <table class="table_alaram">
+                            <colgroup>
+                                <col width="45%">
+                                <col width="55%">
+                            </colgroup>
         <c:forEach var="entry" items="${ALM02}" varStatus="status">
           <tr> 
-             <td>${entry.key}</td> 
+             <th>${entry.key}</th> 
              <td>${entry.value}</td>
-             <td>&nbsp;</td>
           </tr>
-        </c:forEach>		  
-		</tbody>
-	</table>
-</td>
-<td align="center" width="400">
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>${PAM3.S_NAME} ( ${PAM3.S_CODE} )</td>
-		     <td>&nbsp;</td>
-             <td><a href="#" id="pam03">more</a></td>
-		  </tr>
-		  <tr>
-		     <td>Lidar Connection STS</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty ALM03.RemoteConnect}"><c:out value="${ALM03.RemoteConnect}"/></c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Lidar status</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty ALM03.LidarState}"><c:out value="${ALM03.LidarState}"/></c:if></td>
-		  </tr>
-		  <tr>
-		     <td>관측 데이터 수신</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${PAM3.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM3.FILE_RCV_STS == '1'}">OK</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>데이터 송신 프로세스</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${PAM3.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM3.PRO_STS == '1'}">OK</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>최종 수신 시각</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.FILE_RCV_DT}">${PAM3.FILE_RCV_DT}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Today 수신율</td>
-		     <td>&nbsp;</td>
-		     <td><c:out value="${rate03}"/>%</td>
-		  </tr>
-		  <tr>
-		     <td>Yesterday 수신율</td>
-		     <td>&nbsp;</td>
-		     <td><c:out value="${yrate03}"/>%</td>
-		  </tr>
-		</tbody>
-	</table>
-	<br/>
-	
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>Scanning Parameters</td>
-		     <td>&nbsp;</td>
-		     <td><a href="#" id="scan03">more</a></td>
-		  </tr>
-		  <tr>
-		     <td>최종수신시각(UTC)</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.ST_TIME}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Measurement Type</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.P_TYPE}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Azimuth angle</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM1}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Elevation angle</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM2}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Sector size</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM3}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Scanning speed</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM4}</c:if></td>
-		  </tr>
-		  <tr>
-		     <td>Accumulation time</td>
-		     <td>&nbsp;</td>
-		     <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM5}</c:if></td>
-		  </tr>
-		</tbody>
-	</table>
-	
-	<table class="mainList">
-		<tbody>
-		  <tr>
-		     <td>Alaram Messages</td>
-		     <td>&nbsp;</td>
-		     <td>&nbsp;</td>
-		  </tr>
+        </c:forEach>
+
+                        </table>
+                    </div>
+                    
+                    <div class="wind_box fl_left">
+                        <h1 class="fl_left"><img src="image/icon_wind.png" style="margin-bottom:6px">${PAM3.S_NAME} ( ${PAM3.S_CODE} )</h1>
+                        <button type="button" id="pam03" class="btn_more fl_right">MORE</button>
+                        <div class="status fl_left">
+                            <div class="box2 s_01" style="margin-right:5px">
+                                <span class="white">Lidar Connections STS</span> <br/> 
+                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="blue"><c:if test="${not empty ALM03.RemoteConnect}"><c:out value="${ALM03.RemoteConnect}"/></c:if></span>
+                            </div>
+                            <div class="box2 s_01">
+                                <span class="white">Lidar Status</span> <br/> 
+                                <span class="red"><c:if test="${not empty ALM03.LidarState}"><c:out value="${ALM03.LidarState}"/></c:if></span>
+                            </div>
+                            <div class="box2 s_01" style="margin-right:5px;margin-top:5px">
+                                <span class="white">관측데이터 수신</span> <br/> 
+                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="blue"><c:if test="${PAM3.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM3.FILE_RCV_STS == '1'}">OK</c:if></span>
+                            </div>
+                            <div class="box2 s_01"  style="margin-top:5px">
+                                <span class="white">데이터 송신 프로세스</span> <br/> 
+                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                <span class="blue"><c:if test="${PAM3.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM3.PRO_STS == '1'}">OK</c:if></span>
+                            </div>
+                            <div class="box2 s_02" style="margin-right:5px;margin-top:5px">
+                                <span class="white">최종수신시각(UTC)</span>
+                            </div>
+                            <div class="box2 s_02_1"  style="margin-top:5px">
+                                <span class="gray"><c:if test="${not empty PAM3.FILE_RCV_DT}">${PAM3.FILE_RCV_DT}</c:if></span>
+                            </div>
+                            <div class="box2 s_03" style="margin-right:5px;margin-top:5px">
+                                <span class="white">Today 수신율</span>
+                            </div>
+                            <div class="box2 s_03_1"  style="margin-top:5px; padding-right:185px;">
+                                <progress min="0" max="100" value="<c:out value="${rate03}"/>"></progress>
+                                <span class="gray" style="padding-left:142px;"><c:out value="${rate03}"/>%</span>
+                            </div>
+                            <div class="box2 s_03" style="margin-right:5px;margin-top:5px">
+                                <span class="white">Yesterday 수신율</span>
+                            </div>
+                            <div class="box2 s_03_1"  style="margin-top:5px; padding-right:185px;">
+                                <progress min="0" max="100" value="${yrate03}"></progress>
+                                <span class="gray" style="padding-left:142px;">${yrate03}%</span>
+                            </div>
+                        </div>
+                        
+                        <h2 class="fl_left">Scanning Parameters</h2>
+                        <button type="button" id="scan03" class="btn_more fl_right">MORE</button>
+                        <table class="table_scan">
+                            <colgroup>
+                                <col width="45%">
+                                <col width="55%">
+                            </colgroup>
+                            <tr>
+                                <th>최종수신시간 (UTC)</th>
+                                <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.ST_TIME}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Measurement Type</th>
+                                <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.P_TYPE}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Azimuth Angle</th>
+                                <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM1}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Elevation Angle</th>
+                                <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM2}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Sector Size</th>
+                                <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM3}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Scanning Speed</th>
+                                <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM4}</c:if></td>
+                            </tr>
+                            <tr>
+                                <th>Accumulation Time</th>
+                                <td><c:if test="${not empty PAM3.S_CODE}">${PAM3.PAM5}</c:if></td>
+                            </tr>
+                        </table>
+                        
+                        <h2 class="fl_left">Alaram Message</h2>
+                        <button type="button" class="btn_more fl_right">MORE</button>
+                        <table class="table_alaram">
+                            <colgroup>
+                                <col width="45%">
+                                <col width="55%">
+                            </colgroup>
         <c:forEach var="entry" items="${ALM03}" varStatus="status">
           <tr> 
-             <td>${entry.key}</td> 
+             <th>${entry.key}</th> 
              <td>${entry.value}</td>
-             <td>&nbsp;</td>
           </tr>
-        </c:forEach>		  
-		</tbody>
-	</table>
-</td>	
-</tr>
-</table>	
-	</form>	
-</div>
-	
+        </c:forEach>
+                        </table>
+                    </div>
+                
+                </div>
+            </div>
+ </form>  	
 	<%@ include file="/WEB-INF/include/body.jsp" %>
+	<%@ include file="/WEB-INF/include/footer.jsp" %>
+	
 	<script type="text/javascript">
 		$(document).ready(function(){
 			
@@ -425,6 +393,21 @@
 			comSubmit.setUrl("<c:url value='/windLidarHList.do'/>");
 			comSubmit.submit();
 		}
+		
+		var AjaxSearch = function(){
+			$.ajax ({
+				url : "/windlidar/ajax/connSearch", 
+				type : "get",
+				data : { "s_code" :  "13211" },
+				success : function(responseData) {
+					$("#ajax").remove();
+					var data = JSON.parse(responseData);
+					if (data != null)
+					{
+					   // alert(data.ST_TIME);
+					}
+				}
+			});
+		};
+		setTimeout(AjaxSearch, 10000);
 	</script>	
-</body>
-</html>

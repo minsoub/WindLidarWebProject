@@ -1,0 +1,203 @@
+/* �룿�듃 */
+@font-face {
+    font-family:'Nanum';
+    src:url('/windlidar/font/nanum.eot');
+    src:url('/windlidar/font/nanum.eot?#iefix') format('embedded-opentype'), url('/windlidar/font/nanum.woff') format('woff'), url('/windlidar/font/nanum.ttf') format('truetype');
+    font-weight:normal;
+    font-style:normal; 
+}
+@font-face {
+    font-family:'NanumBold';
+    src:url('/windlidar/font/nanum_bold.eot');
+    src:url('/windlidar/font/nanum_bold.eot?#iefix') format('embedded-opentype'), url('/windlidar/font/nanum_bold.woff') format('woff'), url('/windlidar/font/nanum_bold.ttf') format('truetype');
+    font-weight:bold;
+    font-style:normal; 
+}
+
+/* 怨듯넻 */
+
+body {
+    font-family:"Nanum Gothic",sans-serif;
+    margin:0px;
+    padding: 0px;
+    overflow-y: scroll;
+    
+}
+div,h1,h2,h3,h4,h5,h6,p,span,li,button,table {
+    padding: 0;
+	margin: 0;
+}
+img {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+}
+a:link, a:hover, a:active, a:visited {
+    text-decoration: none;
+}
+.fl_left {
+    float: left; 
+}
+.fl_right {
+    float: right;
+}
+
+form,fieldset,legend,input,label,button {
+    margin:0;
+    padding:0;
+}
+input,button {
+    vertical-align:middle
+}
+button {
+    cursor:pointer
+}
+input::-ms-clear {
+    display:none
+}
+legend,label {
+    position:absolute;
+    left:-9999px;
+    top:-9999px
+}
+fieldset {
+    border:none
+}
+button {
+    border: none;
+    text-align:center;
+}
+
+
+
+/* id */
+#wrap {
+	width: 100%;	
+}
+#header {
+	width: 100%;
+    height: 83px;
+    background-image: url("/windlidar/image/top_bg.png");
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+}
+#section {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    margin: auto;
+    min-height: 700px;
+    background-image: url("/windlidar/image/section_bg.png");
+    background-repeat: repeat-x;
+}
+#footer {
+    width: 100%;
+    border-top: 1px solid #d3d3d3;
+    padding: 30px 0;
+    text-align: center;
+    color: #aaaaaa;
+    background: #ffffff;
+    font-size: 12px;
+    margin-top: 35px;
+}
+
+
+/* �뿤�뜑遺�遺� */
+.head {
+    width: 1280px;
+    margin: auto;
+}
+.logo {
+	padding-top: 12px;
+}
+
+.gnb {
+    margin-left: 180px;
+    margin-top: 20px;
+    font-weight: 500;
+}
+.gnb ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.gnb li {
+    float: left;
+}
+.gnb li a {
+    width: 120px;
+    float: left;
+    line-height: 46px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+.gnb li a:hover {
+    color: #ffd200;
+}
+.gnb li a.selected {
+    color: #ffd200;
+}
+
+.login {
+    margin-top: 30px;
+    color: #fff;
+    font-size: 12px;
+    font-family:"Nanum Gothic",sans-serif;
+    font-weight: 500;
+    vertical-align: bottom;
+}
+
+
+/* 濡쒓렇�씤 �럹�씠吏� */
+.login_box {
+    width: 440px;
+    margin: auto;
+    margin-top: 100px;
+    text-align: center;
+}
+
+#uid,#pwd {
+    width:390px;
+    height: 50px;
+    padding-left: 10px;
+    font-size:14px;
+    border: 1px solid #dadada;
+    color: darkgray;
+    margin-bottom:15px
+}
+
+
+._uid, ._upass {
+    width:390px;
+    height: 50px;
+    padding-left: 10px;
+    font-size:14px;
+    border: 1px solid #dadada;
+    color: darkgray;
+    margin-bottom:15px
+}
+
+
+.btn_login {
+    font-size:18px;
+    line-height:50px;
+    background: #5284a8;
+    width: 400px;
+    height: 50px;
+    color: #fff;
+}
+
+.login_text {
+    border-top:1px solid #dadada;
+    padding-top: 40px;
+    width: 400px;
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+    font-size: 12px;
+    color: darkgray;
+}
+

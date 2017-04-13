@@ -1,76 +1,61 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
 <%@ include file="/WEB-INF/include/header.jsp" %>
 
-	<table class="headList">
-	<thead>
-	<th>
-	<h2>월별 관측자료 수신 통계 - 
-	<c:if test="${commandMap.s_code == 13211}">일산(13211)</c:if>
-	<c:if test="${commandMap.s_code == 13210}">송도(13210)</c:if>
-	<c:if test="${commandMap.s_code == 13206}">구로(13206)</c:if>	
-	</h2>
-   </th>
-   </thead>
-   </table>
-   
-   <table class="searchList">
-   <thead>
-     <th width="100">관측소별</th>
-     <th><select id="s_code">
-         <option value="">전체</option>
-         <option value="13211" <c:if test="${commandMap.s_code == 13211}">selected</c:if>>일산(13211)</option>
-         <option value="13210" <c:if test="${commandMap.s_code == 13210}">selected</c:if>>송도(13210)</option>
-         <option value="13206" <c:if test="${commandMap.s_code == 13206}">selected</c:if>>구로(13206)</option>
-     </select>
-     </th>
-     <th width="80">년도</th>
-     <th>
-       <input type="text" id="s_date"  value="${commandMap.s_date}" maxlength="4" numberOnly="true" size="4">
-     </th>
-     <th>
-     <a href="#this" class="btn" id="search">검색</a>
-     </th>
-     <th></th><th width="30%"></th>
-   </thead>
-   </table>
-   	
-	<table class="scan_list">
-		<colgroup>
-			<col width="10%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="6.66%"/>
-			<col width="10%"/>
-		</colgroup>
-		<thead>
-			<tr>
-				<th scope="col">관측소명</th>
-				<th scope="col">1월</th>
-				<th scope="col">2월</th>
-				<th scope="col">3월</th>
-				<th scope="col">4월</th>
-				<th scope="col">5월</th>
-				<th scope="col">6월</th>
-				<th scope="col">7월</th>
-				<th scope="col">8월</th>
-				<th scope="col">9월</th>
-				<th scope="col">10월</th>
-				<th scope="col">11월</th>
-				<th scope="col">12월</th>
-				<th scope="col">수신율</th>
-			</tr>
-		</thead>
-		<tbody>
+            <div id="section"> 
+                <div class="container">
+                    <h3><img src="image/icon_wind.png" style="margin-bottom:6px">월별 관측자료 수신 통계 - 
+                    	<c:if test="${commandMap.s_code == 13211}">일산(13211)</c:if>
+	                    <c:if test="${commandMap.s_code == 13210}">송도(13210)</c:if>
+	                    <c:if test="${commandMap.s_code == 13206}">구로(13206)</c:if>
+	                    <c:if test="${empty commandMap.s_code}">전체</c:if>
+                    </h3>
+                    <div class="search_box">
+                        <form action="" method="" name="search">
+                            <fieldset>
+                                <legend>검색</legend>
+                                                                관측소별
+                                <select id="s_code" name="select_location" class="sel" style="margin-right:25px;margin-left:10px">
+                                  <option value="">전체</option>
+                                  <option value="13211" <c:if test="${commandMap.s_code == 13211}">selected</c:if>>일산(13211)</option>
+                                  <option value="13210" <c:if test="${commandMap.s_code == 13210}">selected</c:if>>송도(13210)</option>
+                                  <option value="13206" <c:if test="${commandMap.s_code == 13206}">selected</c:if>>구로(13206)</option>
+                                </select>
+                                                                날짜
+                                <input type="text" id="s_date"  class="sel" value="${commandMap.s_date}" maxlength="4" numberOnly="true" size="4" style="height:24ptx;">
+                                <button type="button" id="search" class="btn_search" onclick="">검색</button>
+                            </fieldset>                             
+                        </form>
+                    </div>
+                    <div class="box1" style="margin:7px">
+                        <time pubdate><strong>2017년</strong></time> 
+                    </div>
+                    <div class="box s_04_1"  style="margin:7px; padding-right:230px;">
+                        <progress id="t_grap"  min="0" max="100" value="90"></progress>
+                        <span class="red" id="t_rate" style="margin:150px; padding-right:0px;">90%</span> 
+                    </div>               
+
+                    <table class="table_list" style="margin-top:15px">
+                        <thead>
+                            <tr>
+                                <th>관측소명</th>
+                                <th>1월</th>
+                                <th>2월</th>
+                                <th>3월</th>
+                                <th>4월</th>
+                                <th>5월</th>
+                                <th>6월</th>
+                                <th>7월</th>
+                                <th>8월</th>
+                                <th>9월</th>
+                                <th>10월</th>
+                                <th>11월</th>
+                                <th>12월</th>
+                                <th>수신율</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            <c:set var="t_total" value="0" />   
+            <c:set var="g_rate" value="0" />         
 			<c:choose>
 				<c:when test="${fn:length(list) > 0}">
 				   <c:set var="m1" value="0" />
@@ -89,7 +74,7 @@
 					<c:forEach items="${list}" var="row" varStatus="status"> 
 					<c:if test="${(status.index+1) % 12 == 1}">
 						<tr>
-							<td>${row.S_NAME}(${row.S_CODE})</td>	
+							<td class="bold">${row.S_NAME}(${row.S_CODE})</td>	
 				    </c:if>
 							<td>${row.RATE}</td>	
 							<c:set var="avg" value="${avg + row.RATE}"/>	
@@ -108,13 +93,15 @@
 							
                     <c:if test="${(status.index+1) % 12 == 0}">	
 							<td>${avg/12}%</td>
+							<c:set var="t_total" value="${t_total + (avg/12)}" />       
 						</tr>
 					</c:if>
 					     <c:set var="aIndex" value="${aIndex+1}" />
 					</c:forEach>
-					
-						<tr bgcolor="#eee">
-						  <td>&nbsp;</td>
+                        </tbody>
+                        <tfoot>					
+						<tr>
+						  <td class="bold">합계</td>
 						  <td>${m1/(aIndex/12)}%</td>
 						  <td>${m2/(aIndex/12)}%</td>
 						  <td>${m3/(aIndex/12)}%</td>
@@ -127,22 +114,26 @@
 						  <td>${m10/(aIndex/12)}%</td>
 						  <td>${m11/(aIndex/12)}%</td>
 						  <td>${m12/(aIndex/12)}%</td>
-						  <td>&nbsp;</td>
+						  <td>${t_total/(aIndex/12)}%</td>
 						</tr>
+						</tfoot>
+						<c:set var="g_rate" value="${t_total/(aIndex/12)}"/>
 				</c:when>
 				<c:otherwise>
 					<tr>
 						<td colspan="14">조회된 결과가 없습니다.</td>
 					</tr>
 				</c:otherwise>
-			</c:choose>
-		</tbody>
-	</table>
-	
-	<form id="frm"></form>
+			</c:choose>                        
+
+                    </table>               
+                </div>
+            </div>
+            
+ 	<form id="frm"></form>
 	
 	<%@ include file="/WEB-INF/include/body.jsp" %>
-	
+	<%@ include file="/WEB-INF/include/footer.jsp" %>
 	<script type="text/javascript">
 
 		$(document).ready(function(){
@@ -153,6 +144,9 @@
 			});	
 			
 			$(document).on("keyup", "input:text[numberOnly]", function() {$(this).val( $(this).val().replace(/[^0-9]/gi,"") );});
+			
+			$("#t_rate").text("${g_rate}%");
+			$("#t_grap").val("${g_rate}");	
 
 		});
 
@@ -175,6 +169,5 @@
 			comSubmit.submit();
 		}
 		
-	</script>	
-</body>
-</html>
+	</script>	           
+            

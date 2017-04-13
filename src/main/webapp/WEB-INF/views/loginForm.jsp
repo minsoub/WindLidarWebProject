@@ -1,35 +1,32 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
 <%@ include file="/WEB-INF/include/header.jsp" %>
-<div class="centered-wrapper">
-	<h2>로그인하기</h2>
-	<table class="board_list">
-	<form id="frm">
-		<colgroup>
-			<col width="5%"/>
-			<col width="120"/>
-			<col width="250"/>
-		</colgroup>
-		<tbody>
-		  <tr>
-		     <td>&nbsp;</td>
-		     <td>사용자 아이디</td>
-		     <td><input type="text" id="id" name="id"></td>
-		  </tr>
-		  <tr>
-		     <td>&nbsp;</td>
-		     <td>패스워드</td>
-		     <td><input type="password" id="pass" name="pass"></td>
-		  </tr>
-		</tbody>
-		</tbody>
-	</form>
-	</table>
-	<br/>
-	<a href="#this" class="btn" id="login">로그인하기 </a>
-</div>
-	
-	<%@ include file="/WEB-INF/include/body.jsp" %>
+            <div id="section">  
+                <div class="login_box">
+                    <img src="<c:url value='/image/login_img.png' />" alt="Wind Lidar" title="Wind Lidar"/>
+                    <form id="frm"  style="margin-top:50px">
+                        <fieldset>
+                            <legend>로그인 정보입력</legend>
+                            <div class="uid">
+                                <label for="uid">아이디</label>
+                                <input type="text" id="id" name="id" class="_uid" placeholder="아이디">
+                            </div>
+                            <div class="pwd">
+                                <label for="pwd">비밀번호</label>
+                                <input type="password" id="pass" name="pass" class="_upass" placeholder="비밀번호">
+                            </div>                            
+                        </fieldset>
+                        <button type="button" class="btn_login" id="login">로그인</button>
+                    </form>
+                </div>
+                <div class="login_text">
+                    <p>
+                        이 시스템은 권한 있는 사용자만 접속이 가능합니다. <br/>
+                        사용자 등록은 관리자에게 문의하시기 바랍니다.
+                    </p>
+                </div>
+            </div>
+
+<%@ include file="/WEB-INF/include/body.jsp" %>
 	<script type="text/javascript">
 		$(document).ready(function(){
 			
@@ -69,6 +66,5 @@
 			comSubmit.setUrl("<c:url value='/userLogin.do' />");
 			comSubmit.submit();
 		}
-	</script>	
-</body>
-</html>
+	</script>
+<%@ include file="/WEB-INF/include/footer.jsp" %>

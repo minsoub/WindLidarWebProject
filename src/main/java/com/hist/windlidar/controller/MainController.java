@@ -1,18 +1,23 @@
 package com.hist.windlidar.controller;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.hist.windlidar.common.CommandMap;
 import com.hist.windlidar.common.CommonUtil;
@@ -75,5 +80,24 @@ public class MainController {
 		mv.addObject("yeList", yesterDayList);		
 
 		return mv; 
+	}
+	
+	@RequestMapping(value="/ajax/connSearch", method=RequestMethod.GET)
+	public void AjaxViewSearch(@RequestParam("s_code") String s_code, HttpServletResponse response)
+	{
+		log.info("ajax called...."); 
+		ObjectMapper mapper = new ObjectMapper();
+		CommandMap commandMap = new CommandMap();
+		commandMap.put("s_code", "13211");
+		
+		try {
+			Map<String, Object> paramInfo01;
+			paramInfo01 = mainService.selectParamInfo(commandMap.getMap());
+			
+			response.getWriter().print(mapper.writeValueAsString(paramInfo01));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
