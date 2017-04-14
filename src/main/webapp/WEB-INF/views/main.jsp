@@ -36,23 +36,44 @@
                         <button type="button" id="pam01" class="btn_more fl_right">MORE</button>
                         <div class="status fl_left">
                             <div class="box2 s_01" style="margin-right:5px">
-                                <span class="white">Lidar Connections STS</span> <br/> 
-                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="blue"><c:if test="${not empty ALM01.RemoteConnect}"><c:out value="${ALM01.RemoteConnect}"/></c:if></span>
+                                <span class="white">Lidar Connections STS</span> <br/>
+                                <c:if test="${not empty ALM01.RemoteConnect}"> 
+                                   <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="blue"><c:out value="${ALM01.RemoteConnect}"/></span>
+                                </c:if>
+                                <c:if test="${empty ALM01.RemoteConnect}">
+                                   <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="red">N/A</span>
+                                </c:if>                                
                             </div>
                             <div class="box2 s_01">
                                 <span class="white">Lidar Status</span> <br/> 
-                                <span class="gray"><c:if test="${not empty ALM01.LidarState}"><c:out value="${ALM01.LidarState}"/></c:if></span>
+                                <span class="gray">
+                                  <c:if test="${not empty ALM01.LidarState}"><c:out value="${ALM01.LidarState}"/></c:if>
+                                  <c:if test="${empty ALM01.LidarState}">N/A</c:if>
+                                </span>
                             </div>
                             <div class="box2 s_01" style="margin-right:5px;margin-top:5px">
-                                <span class="white">관측데이터 수신</span> <br/> 
-                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="blue"><c:if test="${PAM1.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM1.FILE_RCV_STS == '1'}">OK</c:if></span>
+                                <span class="white">관측데이터 수신</span> <br/>
+                                <c:if test="${PAM1.FILE_RCV_STS == '1'}"> 
+                                   <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="blue">OK</span>
+                                </c:if>
+                                <c:if test="${PAM1.FILE_RCV_STS == '0'}">
+                                   <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="red">ERR</span>                                
+                                </c:if>   
                             </div>
                             <div class="box2 s_01"  style="margin-top:5px">
                                 <span class="white">데이터 송신 프로세스</span> <br/> 
-                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="blue"><c:if test="${PAM1.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM1.PRO_STS == '1'}">OK</c:if></span>
+                                <c:if test="${PAM1.PRO_STS == '1'}">
+                                  <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                  <span class="blue">OK</span>
+                                </c:if>
+                                <c:if test="${PAM1.PRO_STS == '0'}">
+                                  <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                  <span class="red">ERR</span>                                
+                                </c:if>
                             </div>
                             <div class="box2 s_02" style="margin-right:5px;margin-top:5px">
                                 <span class="white">최종수신시각(UTC)</span>
@@ -120,13 +141,12 @@
                                 <col width="45%">
                                 <col width="55%">
                             </colgroup>
-         <c:forEach var="entry" items="${ALM01}" varStatus="status">
-          <tr> 
-             <th>${entry.key}</th> 
-             <td>${entry.value}</td>
-          </tr>
-        </c:forEach>                           
-
+                            <c:forEach var="entry" items="${ALM01}" varStatus="status">
+                            <tr> 
+                               <th>${entry.key}</th> 
+                               <td>${entry.value}</td>
+                            </tr>
+                            </c:forEach>                           
                         </table>
                     </div>
                     
@@ -134,24 +154,46 @@
                         <h1 class="fl_left"><img src="image/icon_wind.png" style="margin-bottom:6px">${PAM2.S_NAME} ( ${PAM2.S_CODE} )</h1>
                         <button type="button" id="pam02" class="btn_more fl_right">MORE</button>
                         <div class="status fl_left">
+                        
                             <div class="box2 s_01" style="margin-right:5px">
-                                <span class="white">Lidar Connections STS</span> <br/> 
-                                <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="red"><c:if test="${not empty ALM02.RemoteConnect}"><c:out value="${ALM02.RemoteConnect}"/></c:if></span>
+                                <span class="white">Lidar Connections STS</span> <br/>
+                                <c:if test="${not empty ALM02.RemoteConnect}"> 
+                                   <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="blue"><c:out value="${ALM02.RemoteConnect}"/></span>
+                                </c:if>
+                                <c:if test="${empty ALM02.RemoteConnect}">
+                                   <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="red">N/A</span>
+                                </c:if>                                
                             </div>
                             <div class="box2 s_01">
                                 <span class="white">Lidar Status</span> <br/> 
-                                <span class="gray"><c:if test="${not empty ALM02.LidarState}"><c:out value="${ALM02.LidarState}"/></c:if></span>
+                                <span class="gray">
+                                  <c:if test="${not empty ALM02.LidarState}"><c:out value="${ALM02.LidarState}"/></c:if>
+                                  <c:if test="${empty ALM02.LidarState}">N/A</c:if>
+                                </span>
                             </div>
                             <div class="box2 s_01" style="margin-right:5px;margin-top:5px">
-                                <span class="white">관측데이터 수신</span> <br/> 
-                                <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="red"><c:if test="${PAM2.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM2.FILE_RCV_STS == '1'}">OK</c:if></span>
+                                <span class="white">관측데이터 수신</span> <br/>
+                                <c:if test="${PAM2.FILE_RCV_STS == '1'}"> 
+                                   <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="blue">OK</span>
+                                </c:if>
+                                <c:if test="${PAM2.FILE_RCV_STS == '0'}">
+                                   <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="red">ERR</span>                                
+                                </c:if>   
                             </div>
                             <div class="box2 s_01"  style="margin-top:5px">
                                 <span class="white">데이터 송신 프로세스</span> <br/> 
-                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="blue"><c:if test="${PAM2.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM2.PRO_STS == '1'}">OK</c:if></span>
+                                <c:if test="${PAM2.PRO_STS == '1'}">
+                                  <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                  <span class="blue">OK</span>
+                                </c:if>
+                                <c:if test="${PAM2.PRO_STS == '0'}">
+                                  <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                  <span class="red">ERR</span>                                
+                                </c:if>
                             </div>
                             <div class="box2 s_02" style="margin-right:5px;margin-top:5px">
                                 <span class="white">최종수신시각(UTC)</span>
@@ -220,13 +262,12 @@
                                 <col width="45%">
                                 <col width="55%">
                             </colgroup>
-        <c:forEach var="entry" items="${ALM02}" varStatus="status">
-          <tr> 
-             <th>${entry.key}</th> 
-             <td>${entry.value}</td>
-          </tr>
-        </c:forEach>
-
+                            <c:forEach var="entry" items="${ALM02}" varStatus="status">
+                            <tr> 
+                               <th>${entry.key}</th> 
+                               <td>${entry.value}</td>
+                            </tr>
+                            </c:forEach>
                         </table>
                     </div>
                     
@@ -235,23 +276,44 @@
                         <button type="button" id="pam03" class="btn_more fl_right">MORE</button>
                         <div class="status fl_left">
                             <div class="box2 s_01" style="margin-right:5px">
-                                <span class="white">Lidar Connections STS</span> <br/> 
-                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="blue"><c:if test="${not empty ALM03.RemoteConnect}"><c:out value="${ALM03.RemoteConnect}"/></c:if></span>
+                                <span class="white">Lidar Connections STS</span> <br/>
+                                <c:if test="${not empty ALM03.RemoteConnect}"> 
+                                   <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="blue"><c:out value="${ALM03.RemoteConnect}"/></span>
+                                </c:if>
+                                <c:if test="${empty ALM03.RemoteConnect}">
+                                   <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="red">N/A</span>
+                                </c:if>                                
                             </div>
                             <div class="box2 s_01">
                                 <span class="white">Lidar Status</span> <br/> 
-                                <span class="red"><c:if test="${not empty ALM03.LidarState}"><c:out value="${ALM03.LidarState}"/></c:if></span>
+                                <span class="gray">
+                                  <c:if test="${not empty ALM03.LidarState}"><c:out value="${ALM03.LidarState}"/></c:if>
+                                  <c:if test="${empty ALM03.LidarState}">N/A</c:if>
+                                </span>
                             </div>
                             <div class="box2 s_01" style="margin-right:5px;margin-top:5px">
-                                <span class="white">관측데이터 수신</span> <br/> 
-                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="blue"><c:if test="${PAM3.FILE_RCV_STS == '0'}">ERR</c:if><c:if test="${PAM3.FILE_RCV_STS == '1'}">OK</c:if></span>
+                                <span class="white">관측데이터 수신</span> <br/>
+                                <c:if test="${PAM3.FILE_RCV_STS == '1'}"> 
+                                   <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="blue">OK</span>
+                                </c:if>
+                                <c:if test="${PAM3.FILE_RCV_STS == '0'}">
+                                   <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                   <span class="red">ERR</span>                                
+                                </c:if>   
                             </div>
                             <div class="box2 s_01"  style="margin-top:5px">
                                 <span class="white">데이터 송신 프로세스</span> <br/> 
-                                <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
-                                <span class="blue"><c:if test="${PAM3.PRO_STS == '0'}">ERR</c:if><c:if test="${PAM3.PRO_STS == '1'}">OK</c:if></span>
+                                <c:if test="${PAM3.PRO_STS == '1'}">
+                                  <img src="image/sts_blue.png" style="margin-bottom:6px;margin-right:4px;">
+                                  <span class="blue">OK</span>
+                                </c:if>
+                                <c:if test="${PAM3.PRO_STS == '0'}">
+                                  <img src="image/sts_red.png" style="margin-bottom:6px;margin-right:4px;">
+                                  <span class="red">ERR</span>                                
+                                </c:if>
                             </div>
                             <div class="box2 s_02" style="margin-right:5px;margin-top:5px">
                                 <span class="white">최종수신시각(UTC)</span>
@@ -319,12 +381,12 @@
                                 <col width="45%">
                                 <col width="55%">
                             </colgroup>
-        <c:forEach var="entry" items="${ALM03}" varStatus="status">
-          <tr> 
-             <th>${entry.key}</th> 
-             <td>${entry.value}</td>
-          </tr>
-        </c:forEach>
+                            <c:forEach var="entry" items="${ALM03}" varStatus="status">
+                            <tr> 
+                               <th>${entry.key}</th> 
+                               <td>${entry.value}</td>
+                            </tr>
+                            </c:forEach>
                         </table>
                     </div>
                 

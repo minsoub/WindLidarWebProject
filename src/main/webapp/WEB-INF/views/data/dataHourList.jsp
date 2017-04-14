@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib uri="http://hist.co.kr/functions" prefix="f" %>
 <%@ include file="/WEB-INF/include/header.jsp" %>
 
 
@@ -54,12 +55,72 @@
 					<c:forEach items="${list}" var="row" varStatus="status">
 						<tr>
 							<td class="bold">${row.ST_TIME}시 ~ </td>						
-							<td><img src="<c:if test="${row.DIS1 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS1 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
-							<td><img src="<c:if test="${row.DIS2 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS2 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
-							<td><img src="<c:if test="${row.DIS3 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS3 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
-							<td><img src="<c:if test="${row.DIS4 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS4 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
-							<td><img src="<c:if test="${row.DIS5 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS5 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
-							<td><img src="<c:if test="${row.DIS6 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS6 == 0}"><c:url value='/image/sts_red.png'/></c:if>"></td>
+							<td>
+							    <c:set var="sDay" value="${commandMap.s_date} ${row.ST_TIME}:10:00"/>
+							    <c:choose>
+							       <c:when test="${f:daysUntilToday(sDay) == false}">
+							          &nbsp;
+							       </c:when>
+							       <c:otherwise>
+							          <img src="<c:if test="${row.DIS1 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS1 == 0}"><c:url value='/image/sts_red.png'/></c:if>">
+							       </c:otherwise>
+							    </c:choose>
+							</td>
+							<td>
+							    <c:set var="sDay" value="${commandMap.s_date} ${row.ST_TIME}:20:00"/>
+							    <c:choose>
+							       <c:when test="${f:daysUntilToday(sDay) == false}">
+							          &nbsp;
+							       </c:when>
+							       <c:otherwise>
+							          <img src="<c:if test="${row.DIS2 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS2 == 0}"><c:url value='/image/sts_red.png'/></c:if>">
+							       </c:otherwise>
+							    </c:choose>
+							</td>
+							<td>
+							    <c:set var="sDay" value="${commandMap.s_date} ${row.ST_TIME}:30:00"/>
+							    <c:choose>
+							       <c:when test="${f:daysUntilToday(sDay) == false}">
+							          &nbsp;
+							       </c:when>
+							       <c:otherwise>
+							          <img src="<c:if test="${row.DIS3 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS3 == 0}"><c:url value='/image/sts_red.png'/></c:if>">
+							       </c:otherwise>
+							    </c:choose>
+							</td>
+							<td>
+							    <c:set var="sDay" value="${commandMap.s_date} ${row.ST_TIME}:40:00"/>
+							    <c:choose>
+							       <c:when test="${f:daysUntilToday(sDay) == false}">
+							          &nbsp;
+							       </c:when>
+							       <c:otherwise>
+							          <img src="<c:if test="${row.DIS4 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS4 == 0}"><c:url value='/image/sts_red.png'/></c:if>">
+							       </c:otherwise>
+							    </c:choose>
+							</td>
+							<td>
+							    <c:set var="sDay" value="${commandMap.s_date} ${row.ST_TIME}:50:00"/>
+							    <c:choose>
+							       <c:when test="${f:daysUntilToday(sDay) == false}">
+							          &nbsp;
+							       </c:when>
+							       <c:otherwise>
+							          <img src="<c:if test="${row.DIS5 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS5 == 0}"><c:url value='/image/sts_red.png'/></c:if>">
+							       </c:otherwise>
+							    </c:choose>
+							</td>
+							<td>
+							    <c:set var="sDay" value="${commandMap.s_date} ${row.ST_TIME}:59:00"/>
+							    <c:choose>
+							       <c:when test="${f:daysUntilToday(sDay) == false}">
+							          &nbsp;
+							       </c:when>
+							       <c:otherwise>
+							          <img src="<c:if test="${row.DIS6 == 1}"><c:url value='/image/sts_green.png'/></c:if><c:if test="${row.DIS6 == 0}"><c:url value='/image/sts_red.png'/></c:if>">
+							       </c:otherwise>
+							    </c:choose>
+							</td>
 							<td>${row.RATE}%</td>
 						</tr>
 						<c:set var="t_data" value="${t_data + row.RATE}"/>	

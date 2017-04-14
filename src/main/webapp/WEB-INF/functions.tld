@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib 
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+    version="2.1">
+
+    <tlib-version>1.0</tlib-version>
+    <short-name>Custom_Functions</short-name>
+    <uri>http://hist.co.kr/functions</uri>
+
+    <function>
+        <name>daysBetween</name>
+        <function-class>com.hist.windlidar.common.DateFunCls</function-class>
+        <function-signature>boolean daysBetween(java.util.Date, java.util.Date)</function-signature>
+    </function>
+    <function>
+        <name>daysUntilToday</name>
+        <function-class>com.hist.windlidar.common.DateFunCls</function-class>
+        <function-signature>boolean daysUntilToday(java.lang.String)</function-signature>
+    </function>
+    
+</taglib>
