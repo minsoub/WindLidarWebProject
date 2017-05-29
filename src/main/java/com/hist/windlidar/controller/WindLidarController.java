@@ -160,6 +160,7 @@ public class WindLidarController {
 		return mv;
 	}
 	
+	
 	@RequestMapping(value="/index.do") 
 	public ModelAndView index(CommandMap commandMap) throws Exception
 	{

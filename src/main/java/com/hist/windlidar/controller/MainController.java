@@ -82,6 +82,31 @@ public class MainController {
 		return mv; 
 	}
 	
+	/**
+	 * Alarm 정보를 팝업 화면에 출력한다.
+	 * 
+	 * @param s_code
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/alarm.do", method=RequestMethod.GET)
+	public ModelAndView alarmDetail(@RequestParam("s_code") String s_code) throws Exception
+	{
+		ModelAndView mv = new ModelAndView("/data/alarmDetail");
+		
+		CommandMap commandMap = new CommandMap();
+		commandMap.put("s_code", s_code);
+		List<Map<String, Object>> alarmInfo = mainService.selectAlaramDetail(commandMap.getMap());
+		
+		if (alarmInfo.size() != 0)
+		{
+			mv.addObject("ST_TIME", alarmInfo.get(0));
+			mv.addObject("ALM", alarmInfo.get(1));
+		}
+		return mv;
+	}
+	
+	
 	@RequestMapping(value="/ajax/connSearch", method=RequestMethod.GET)
 	public void AjaxViewSearch(@RequestParam("s_code") String s_code, HttpServletResponse response)
 	{

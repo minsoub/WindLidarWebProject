@@ -1,5 +1,6 @@
 package com.hist.windlidar.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,5 +79,32 @@ public class MainServiceImpl implements MainService {
 	public List<Map<String, Object>> selectRateYesterDay(Map<String, Object> commandMap) throws Exception {
 		// TODO Auto-generated method stub
 		return mainDAO.selectRcvRateYesterDay(commandMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAlaramDetail(Map<String, Object> commandMap) throws Exception {
+		// TODO Auto-generated method stub
+		Map<String, Object> info = mainDAO.selectAlaramInfo(commandMap);
+		
+		// xml 데이터를 파싱한다.
+		if (info == null)
+		{
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			return list;
+		}
+		else 
+		{
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+			String xmlData = info.get("CONTENT").toString();
+			Map<String, Object> xmlInfo = CommonUtil.getInstance().parseXML(xmlData);
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("ST_TIME", info.get("ST_TIME").toString());
+			data.put("S_NAME",  info.get("S_NAME").toString());
+			data.put("S_CODE",  info.get("S_CODE").toString());
+			list.add(data);			
+			list.add(xmlInfo);
+			
+			return list;
+		}
 	}
 }

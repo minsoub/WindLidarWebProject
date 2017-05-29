@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
- 
+  
 <mapper namespace="windlidar">
     <select id="selectWindLidarPerHour" parameterType="hashmap" resultType="hashmap">
  		<![CDATA[   
@@ -54,7 +54,7 @@ select
       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
       
-from t_rcv_sts
+from t_rcv_file
 WHERE DATE_FORMAT(st_time, '%Y-%m-%d') = #{s_date} 
   AND S_CODE = #{s_code}
 GROUP BY DATE_FORMAT(st_time, '%Y-%m-%d %H')
@@ -91,7 +91,7 @@ SELECT
               SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (srv_file_cnt), 0)) s4,
               SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
               SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
-       FROM T_RCV_STS
+       FROM T_RCV_FILE
       WHERE DATE_FORMAT(st_time, '%Y-%m') = #{s_date} 
         AND S_CODE = #{s_code}
       GROUP BY DATE_FORMAT(st_time, '%Y-%m-%d %H')
@@ -157,7 +157,7 @@ SELECT
                            SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (srv_file_cnt), 0)) s4,
                            SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
                            SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
-                     FROM T_RCV_STS
+                     FROM T_RCV_FILE
                     WHERE DATE_FORMAT(st_time, '%Y') = #{s_date} 
 	  <if test="s_code != null">
 	           AND  S_CODE = #{s_code}
@@ -376,7 +376,7 @@ SELECT
            SELECT
                   S_CODE, REG_DT AS FILE_RCV_DT,
                   IF(NOW() > ADDDATE(REG_DT, INTERVAL 30 MINUTE), 0, 1) AS FILE_RCV_STS
-             FROM T_RCV_STS
+             FROM T_RCV_FILE
             WHERE S_CODE = #{s_code}
             ORDER BY NO DESC LIMIT 0, 1
     ) T2
@@ -387,9 +387,10 @@ SELECT
 	<select id="selectAlaramInfo" parameterType="hashmap" resultType="hashmap">
 		<![CDATA[
 			SELECT
-					S_CODE, ST_TIME, CONTENT
-			  FROM  T_RCV_ALM_INFO
-			 WHERE  S_CODE = #{s_code}
+					B.S_NAME, B.S_CODE, A.ST_TIME, A.CONTENT
+			  FROM  T_RCV_ALM_INFO A, T_ST_CODE B
+			 WHERE  A.S_CODE = #{s_code}
+			   AND  A.S_CODE = B.S_CODE
 			 LIMIT 0, 1
 		]]>
 	</select>
@@ -430,7 +431,7 @@ SELECT
                       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (srv_file_cnt), 0)) s4,
                       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
                       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
-                 FROM T_RCV_STS
+                 FROM T_RCV_FILE
                 WHERE DATE_FORMAT(st_time, '%Y-%m-%d') = #{s_date} 
                 GROUP BY S_CODE,  DATE_FORMAT(st_time, '%Y-%m-%d %H')
         ) TST
@@ -478,7 +479,7 @@ SELECT
                       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '30' AND '39'), (srv_file_cnt), 0)) s4,
                       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '40' AND '49'), (srv_file_cnt), 0)) s5,
                       SUM(IF ( (DATE_FORMAT(st_time, '%i') BETWEEN '50' AND '59'), (srv_file_cnt), 0)) s6
-                 FROM T_RCV_STS
+                 FROM T_RCV_FILE
                 WHERE DATE_FORMAT(st_time, '%Y-%m-%d') = #{s_date} 
                 GROUP BY S_CODE,  DATE_FORMAT(st_time, '%Y-%m-%d %H')
         ) TST

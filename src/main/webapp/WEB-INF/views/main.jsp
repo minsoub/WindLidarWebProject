@@ -135,7 +135,7 @@
                         </table>
                         
                         <h2 class="fl_left">Alaram Message</h2>
-                        <button type="button" class="btn_more fl_right" onclick="alarm()">MORE</button>
+                        <button type="button" class="btn_more fl_right" <c:if test='${not empty ALM01}'>id="alarm01"</c:if>>MORE</button>
                         <table class="table_alaram">
                             <colgroup>
                                 <col width="45%">
@@ -256,7 +256,7 @@
                         </table>
                         
                         <h2 class="fl_left">Alaram Message</h2>
-                        <button type="button" class="btn_more fl_right">MORE</button>
+                        <button type="button" class="btn_more fl_right"  <c:if test='${not empty ALM02}'>id="alarm02"</c:if>>MORE</button>
                         <table class="table_alaram">
                             <colgroup>
                                 <col width="45%">
@@ -375,7 +375,7 @@
                         </table>
                         
                         <h2 class="fl_left">Alaram Message</h2>
-                        <button type="button" class="btn_more fl_right">MORE</button>
+                        <button type="button" class="btn_more fl_right"  <c:if test='${not empty ALM03}'>id="alarm03"</c:if>>MORE</button>
                         <table class="table_alaram">
                             <colgroup>
                                 <col width="45%">
@@ -428,6 +428,19 @@
 				e.preventDefault();
 				fn_pamGoUrl("13206");
 			});	
+			
+			$("#alarm01").on("click", function(e){ 
+				e.preventDefault();
+				fn_alarmGoUrl("13211");
+			});	
+			$("#alarm02").on("click", function(e){ 
+				e.preventDefault();
+				fn_alarmGoUrl("13210");
+			});	
+			$("#alarm03").on("click", function(e){ 
+				e.preventDefault();
+				fn_alarmGoUrl("13206");
+			});				
 		});
 
 		Date.prototype.yyyymmdd = function() {
@@ -454,6 +467,15 @@
 			comSubmit.addParam("s_date", date.yyyymmdd());
 			comSubmit.setUrl("<c:url value='/windLidarHList.do'/>");
 			comSubmit.submit();
+		}
+		
+		function fn_alarmGoUrl(s_code)
+		{			
+			var url="<c:url value='/alarm.do'/>"+"?s_code="+s_code;
+			//alert(url);
+			
+			var option="resizable=no, scrollbars=no, status=no, width=800, height=800";
+			window.open(url, "alarmForm", option);
 		}
 		
 		var AjaxSearch = function(){
