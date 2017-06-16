@@ -47,7 +47,12 @@
 		        fn_loginProcess();
 		    }
 		});
-		
+		$('input[type=password]').on('keydown', function(e) {
+		    if (e.which == 13) {
+		        e.preventDefault();
+		        fn_loginProcess();
+		    }
+		});		
 		
 		function fn_loginProcess(){
 			if (frm.id.value == "")
