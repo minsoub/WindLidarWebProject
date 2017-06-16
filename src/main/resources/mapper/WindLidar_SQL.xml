@@ -398,7 +398,11 @@ SELECT
 	<select id="selectRcvRateToday" parameterType="hashmap" resultType="hashmap">
 		<![CDATA[
 SELECT
-       A.S_CODE, IFNULL(B.RCV_RATE, 0) RCV_RATE
+       A.S_CODE,  
+		 case 
+		     when IFNULL(B.RCV_RATE, 0) > 100.0 then 100.0 
+			  else IFNULL(B.RCV_RATE, 0)
+		 end  RCV_RATE        
   FROM T_ST_CODE A
   LEFT JOIN 
   (
