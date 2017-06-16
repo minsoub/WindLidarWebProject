@@ -400,7 +400,7 @@ SELECT
 SELECT
        A.S_CODE,  
 		 case 
-		     when IFNULL(B.RCV_RATE, 0) > 100.0 then 100.0 
+		     when IFNULL(B.RCV_RATE, 0) > 100.0 then 100 
 			  else IFNULL(B.RCV_RATE, 0)
 		 end  RCV_RATE        
   FROM T_ST_CODE A
