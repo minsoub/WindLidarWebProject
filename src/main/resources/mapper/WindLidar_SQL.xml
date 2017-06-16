@@ -23,8 +23,8 @@ LEFT JOIN
 select
         st_time,    ROUND(
 		                    (
-								   IFNULL(ROUND(r1/s1 * 100, 2), 0) + IFNULL(ROUND(r2/s2 * 100, 2), 0) + IFNULL(ROUND(r3/s3 * 100, 2), 0) + 
-		                     IFNULL(ROUND(r4/s4 * 100, 2), 0) + IFNULL(ROUND(r5/s5 * 100, 2), 0) + IFNULL(ROUND(r6/s6 * 100, 2), 0)
+								   IFNULL(ROUND(s1/r1 * 100, 2), 0) + IFNULL(ROUND(s2/r2 * 100, 2), 0) + IFNULL(ROUND(s3/r3 * 100, 2), 0) + 
+		                     IFNULL(ROUND(s4/r4 * 100, 2), 0) + IFNULL(ROUND(s5/r5 * 100, 2), 0) + IFNULL(ROUND(s6/r6 * 100, 2), 0)
 									)/6, 2
 						  ) AS R,
 		              
@@ -70,8 +70,8 @@ SELECT
       ST_DAY,  H_TIME, 
       ROUND(
 		      (
-								   IFNULL(ROUND(r1/s1 * 100, 2), 0) + IFNULL(ROUND(r2/s2 * 100, 2), 0) + IFNULL(ROUND(r3/s3 * 100, 2), 0) + 
-		                     IFNULL(ROUND(r4/s4 * 100, 2), 0) + IFNULL(ROUND(r5/s5 * 100, 2), 0) + IFNULL(ROUND(r6/s6 * 100, 2), 0)
+							 IFNULL(ROUND(s1/r1 * 100, 2), 0) + IFNULL(ROUND(s2/r2 * 100, 2), 0) + IFNULL(ROUND(s3/r3 * 100, 2), 0) + 
+		                     IFNULL(ROUND(s4/r4 * 100, 2), 0) + IFNULL(ROUND(s5/r5 * 100, 2), 0) + IFNULL(ROUND(s6/r6 * 100, 2), 0)
 									)/6, 2
 				) AS RATE
  FROM (
@@ -134,8 +134,8 @@ SELECT
                      S_CODE, ST_DAY,  H_TIME, 
                      ROUND(
 		                       (
-								        IFNULL(ROUND(r1/s1 * 100, 2), 0) + IFNULL(ROUND(r2/s2 * 100, 2), 0) + IFNULL(ROUND(r3/s3 * 100, 2), 0) + 
-		                          IFNULL(ROUND(r4/s4 * 100, 2), 0) + IFNULL(ROUND(r5/s5 * 100, 2), 0) + IFNULL(ROUND(r6/s6 * 100, 2), 0)
+								  IFNULL(ROUND(s1/r1 * 100, 2), 0) + IFNULL(ROUND(s2/r2 * 100, 2), 0) + IFNULL(ROUND(s3/r3 * 100, 2), 0) + 
+		                          IFNULL(ROUND(s4/r4 * 100, 2), 0) + IFNULL(ROUND(s5/r5 * 100, 2), 0) + IFNULL(ROUND(s6/r6 * 100, 2), 0)
 									  )/6, 2
 				         ) AS RATE
                FROM 

@@ -71,11 +71,12 @@
 				   <c:set var="m11" value="0" />
 				   <c:set var="m12" value="0" />
 				   <c:set var="aIndex" value="0" />
+				   <c:set var="avg" value="0" />
 					<c:forEach items="${list}" var="row" varStatus="status"> 
-					<c:if test="${(status.index+1) % 12 == 1}">
+					    <c:if test="${(status.index+1) % 12 == 1}">
 						<tr>
 							<td class="bold">${row.S_NAME}(${row.S_CODE})</td>	
-				    </c:if>
+				        </c:if>
 							<td>${row.RATE}</td>	
 							<c:set var="avg" value="${avg + row.RATE}"/>	
 							<c:if test="${(status.index+1) % 12 == 1}"><c:set var="m1" value="${m1+row.RATE}"/></c:if>
@@ -91,11 +92,12 @@
 							<c:if test="${(status.index+1) % 12 == 11}"><c:set var="m11" value="${m11+row.RATE}"/></c:if>
 							<c:if test="${(status.index+1) % 12 == 0}"><c:set var="m12" value="${m12+row.RATE}"/></c:if>
 							
-                    <c:if test="${(status.index+1) % 12 == 0}">	
+                       <c:if test="${(status.index+1) % 12 == 0}">	
 							<td>${avg/12}%</td>
 							<c:set var="t_total" value="${t_total + (avg/12)}" />       
 						</tr>
-					</c:if>
+						<c:set var="avg" value="0" />
+					    </c:if>
 					     <c:set var="aIndex" value="${aIndex+1}" />
 					</c:forEach>
                         </tbody>
