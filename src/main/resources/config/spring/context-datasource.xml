@@ -7,9 +7,16 @@
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3303/windlidarDB" />
+		<property name="url" value="jdbc:mysql://localhost:3306/windlidarDB?autoReconnect=true" />
 		<property name="username" value="histUser" />
 		<property name="password" value="hist123" />
+        <!-- validationQuery:유효 검사용 쿼리( 1개 이상의 row를 반환하는 쿼리를 넣어주면 된다. ) --> 
+        <property name="validationQuery" value="select 1"/>
+        <!-- testWhileIdle:컨넥션이 놀고 있을때 -_-; validationQuery 를 이용해서 유효성 검사를 할지 여부. -->
+        <property name="testWhileIdle" value="true"/>
+        <!-- timeBetweenEvictionRunsMillis:해당 밀리초마다 validationQuery 를 이용하여 유효성 검사 진행 -->
+        <property name="timeBetweenEvictionRunsMillis" value="7200000"/>
+    		
 	</bean>
 		
 </beans>
